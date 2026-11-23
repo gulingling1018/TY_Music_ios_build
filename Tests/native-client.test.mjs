@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createNativeClient, createPlaybackProjection } from '../Resources/Web/native-client.mjs'
+import { createNativeClient, createPlaybackProjection } from '../AppAssets/Web/native-client.mjs'
 
 function environment(postMessage) {
   const events = new EventTarget()
