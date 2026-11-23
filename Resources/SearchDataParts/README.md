@@ -6,12 +6,12 @@
 - 拼接顺序：`part001` → `part002` → `part003`
 - 清单：`manifest.json`（每个分片的大小与 SHA256）
 - 重组：按顺序二进制拼接后，校验清单中的总 SHA256
-- 当前状态：仅存放，不进入 IPA；完整离线索引搜索接入时再由 App 组装
+- 当前状态：随 App 打包在 `Resources/SearchDataParts/`；App 首次启动按清单拼接并校验 SHA256，然后以只读 SQLite 查询
 - 重新生成：
 
 ```bash
 python scripts/split-search-db.py \
   --source <music_cache.db> \
-  --output SearchDataParts \
+  --output Resources/SearchDataParts \
   --parts 3
 ```

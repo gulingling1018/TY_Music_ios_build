@@ -19,10 +19,10 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'SearchDataParts/**'
+      - 'Resources/SearchDataParts/**'
   pull_request:
     paths-ignore:
-      - 'SearchDataParts/**'
+      - 'Resources/SearchDataParts/**'
 
 permissions:
   contents: read

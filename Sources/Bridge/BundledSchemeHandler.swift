@@ -11,11 +11,13 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
 
     private let root: URL
     private let mediaRoot: URL
+    private let proxy: RemoteStreamProxy
     private var boxes: [ObjectIdentifier: TaskBox] = [:]
 
-    init(root: URL, mediaRoot: URL) {
+    init(root: URL, mediaRoot: URL, proxy: RemoteStreamProxy) {
         self.root = root
         self.mediaRoot = mediaRoot
+        self.proxy = proxy
     }
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
@@ -40,6 +42,11 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
             // 前端把本地音频拼成 /api/stream_local?path=<相对路径>，这里按 Range 提供文件。
             if url.path == "/api/stream_local" {
                 try sendLocalMedia(url: url, method: method, box: box)
+                return
+            }
+            // 离线库搜索结果的音频：解析 B 站 DASH 地址后代理转发。
+            if url.path == "/api/stream_remote" {
+                handleRemoteStream(url: url, box: box)
                 return
             }
             guard method == "GET" else { throw ProbeError.invalid("不支持的资源请求") }
@@ -148,6 +155,35 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
             remaining -= Int64(chunk.count)
         }
         if !box.stopped { box.task.didFinish() }
+    }
+
+    private func handleRemoteStream(url: URL, box: TaskBox) {
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        guard let hash = components?.queryItems?.first(where: { $0.name == "hash" })?.value,
+              !hash.isEmpty else {
+            if !box.stopped { box.task.didFailWithError(ProbeError.invalid("缺少歌曲ID")) }
+            return
+        }
+        let range = box.task.request.value(forHTTPHeaderField: "Range")
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let result = try await self.proxy.fetch(hashId: hash, range: range)
+                await MainActor.run {
+                    guard !box.stopped,
+                          let response = HTTPURLResponse(url: url, statusCode: result.status,
+                                                         httpVersion: "HTTP/1.1",
+                                                         headerFields: result.headers) else { return }
+                    box.task.didReceive(response)
+                    box.task.didReceive(result.body)
+                    box.task.didFinish()
+                }
+            } catch {
+                await MainActor.run {
+                    if !box.stopped { box.task.didFailWithError(error) }
+                }
+            }
+        }
     }
 
     private static let placeholderCoverSvg = """

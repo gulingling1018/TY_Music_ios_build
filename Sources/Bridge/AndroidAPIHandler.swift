@@ -85,7 +85,7 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
             return scanProgressEnvelope()
         }
         if method == "GET", path == "/api/search" {
-            return searchEnvelope(items: items)
+            return await searchEnvelope(items: items)
         }
         if method == "GET", path == "/api/bili-search" {
             return await biliSearchEnvelope(items: items)
@@ -193,19 +193,49 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
         ]]
     }
 
-    private func searchEnvelope(items: [URLQueryItem]?) -> [String: Any] {
+    private func searchEnvelope(items: [URLQueryItem]?) async -> [String: Any] {
         let keyword = Self.query(items, "q") ?? ""
         let page = max(1, Self.intValue(Self.query(items, "page")) ?? 1)
         let limit = min(100, max(1, Self.intValue(Self.query(items, "limit")) ?? 30))
-        let result = runtime.library.search(keyword, page: page, limit: limit)
-        return ["status": 200, "data": [
+
+        do {
+            let offline = try await runtime.offlineSearch.search(keyword, page: page, limit: limit)
+            if page == 1 {
+                let local = runtime.library.search(keyword, page: 1, limit: 100)
+                if !local.songs.isEmpty {
+                    var merged = local.songs
+                    var seen = Set(merged.compactMap { $0["hash_id"] as? String })
+                    for song in offline.songs {
+                        if let id = song["hash_id"] as? String, seen.insert(id).inserted {
+                            merged.append(song)
+                        }
+                    }
+                    let trimmed = Array(merged.prefix(limit))
+                    let total = offline.total + local.total
+                    return Self.searchResult(songs: trimmed, page: page, limit: limit,
+                                             total: total, hasMore: trimmed.count < total)
+                }
+            }
+            return Self.searchResult(songs: offline.songs, page: page, limit: limit,
+                                     total: offline.total, hasMore: offline.hasMore)
+        } catch {
+            // 主仓库未内置分片时回退到已导入本地音乐。
+            let local = runtime.library.search(keyword, page: page, limit: limit)
+            return Self.searchResult(songs: local.songs, page: page, limit: limit,
+                                     total: local.total, hasMore: local.hasMore)
+        }
+    }
+
+    private static func searchResult(songs: [[String: Any]], page: Int, limit: Int,
+                                     total: Int, hasMore: Bool) -> [String: Any] {
+        ["status": 200, "data": [
             "success": true,
-            "songs": result.songs,
+            "songs": songs,
             "page": page,
             "pageSize": limit,
             "limit": limit,
-            "resultCount": result.total,
-            "hasMore": result.hasMore,
+            "resultCount": total,
+            "hasMore": hasMore,
             "searchKind": "local",
             "asyncSearchPending": false
         ]]
