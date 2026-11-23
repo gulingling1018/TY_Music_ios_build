@@ -5,6 +5,7 @@ import WebKit
 final class ProbeViewController: UIViewController, WKNavigationDelegate {
     private let runtime: ProbeRuntime
     private var webView: WKWebView!
+    private var apiHandler: AndroidAPIHandler?
     private let failureLabel = UILabel()
     private var webGeneration = 0
 
@@ -17,19 +18,30 @@ final class ProbeViewController: UIViewController, WKNavigationDelegate {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-        let root = Bundle.main.resourceURL!.appendingPathComponent("Resources/Web", isDirectory: true)
+        let root = Bundle.main.resourceURL!.appendingPathComponent("Resources", isDirectory: true)
         configuration.setURLSchemeHandler(BundledSchemeHandler(root: root), forURLScheme: "tymusic")
+        let apiHandler = AndroidAPIHandler()
+        configuration.userContentController.add(apiHandler, name: AndroidAPIHandler.scriptMessageName)
+        configuration.userContentController.addUserScript(
+            WKUserScript(source: AndroidAPIHandler.shimScript,
+                         injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        )
         configuration.userContentController.addScriptMessageHandler(NativeMessageHandler(router: runtime.router), contentWorld: .page, name: "tyMusic")
+        self.apiHandler = apiHandler
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
+        webView.isOpaque = false
+        webView.backgroundColor = .systemBackground
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+        apiHandler.attach(webView)
         failureLabel.numberOfLines = 0
         failureLabel.textColor = .systemRed
         failureLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +59,7 @@ final class ProbeViewController: UIViewController, WKNavigationDelegate {
             do { self.emit("downloads", try self.runtime.downloads.snapshot()) }
             catch { self.emit("downloads", ["error": "无法读取下载状态"]) }
         }
-        webView.load(URLRequest(url: URL(string: "tymusic://app/index.html")!))
+        webView.load(URLRequest(url: URL(string: "tymusic://app/WebApp/index.html")!))
     }
 
     private func emit(_ name: String, _ data: [String: Any]) {
@@ -79,7 +91,7 @@ final class ProbeViewController: UIViewController, WKNavigationDelegate {
     }
 
     private func showFailure() {
-        failureLabel.text = "验证页面加载失败，请重新打开App。原生播放状态会保留。"
+        failureLabel.text = "应用页面加载失败，请重新打开 App。原生播放状态会保留。"
         failureLabel.isHidden = false
     }
 }

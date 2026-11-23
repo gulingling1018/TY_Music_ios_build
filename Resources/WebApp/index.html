@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>TY音乐</title>
+  <script>
+    (function () {
+      window.__TY_NATIVE_SPLASH_ACTIVE = Boolean(window.AndroidStartup?.isCoverVisible());
+      if (window.__TY_NATIVE_SPLASH_ACTIVE) document.documentElement.classList.add('native-startup');
+      const THEME_KEY = 'ty_skin_theme_config_v2';
+      const LEGACY_KEY = 'ty_splash_skin_config_v1';
+
+      let splashConfig = null;
+      try {
+        const themeRaw = localStorage.getItem(THEME_KEY);
+        if (themeRaw) {
+          const parsedTheme = JSON.parse(themeRaw);
+          const splashTarget = parsedTheme?.targets?.splash_screen;
+          if (splashTarget?.enabled && splashTarget?.mediaSrc) {
+            splashConfig = {
+              mediaType: splashTarget.mediaType || 'image',
+              mediaSrc: splashTarget.mediaSrc,
+              mediaFit: splashTarget.mediaFit || 'contain',
+              scale: Number(splashTarget.scale || 1),
+              translateX: Number(splashTarget.translateX || 0),
+              translateY: Number(splashTarget.translateY || 0),
+              overlayOpacity: Number(splashTarget.overlayOpacity ?? 0),
+              blur: Number(splashTarget.blur || 0),
+              radius: Number(splashTarget.radius || 0),
+              animationName: splashTarget.animationName || 'fade-scale',
+              animationDurationMs: Number(splashTarget.animationDurationMs || 1200),
+              animationEasing: splashTarget.animationEasing || 'ease-out',
+            };
+          }
+        }
+
+        if (!splashConfig) {
+          const legacyRaw = localStorage.getItem(LEGACY_KEY);
+          if (legacyRaw) {
+            const parsedLegacy = JSON.parse(legacyRaw);
+            if (parsedLegacy?.enabled && parsedLegacy?.splash?.src) {
+              splashConfig = {
+                mediaType: 'image',
+                mediaSrc: parsedLegacy.splash.src,
+                mediaFit: 'contain',
+                scale: Number(parsedLegacy.splash.scale || 1),
+                translateX: Number(parsedLegacy.splash.translateX || 0),
+                translateY: Number(parsedLegacy.splash.translateY || 0),
+              overlayOpacity: 0,
+                blur: 0,
+                radius: 0,
+                animationName: 'fade-scale',
+                animationDurationMs: 1200,
+                animationEasing: 'ease-out',
+              };
+            }
+          }
+        }
+      } catch (_) {
+        splashConfig = null;
+      }
+
+      window.__TY_PRELOADED_SPLASH_CONFIG = splashConfig;
+      if (splashConfig?.mediaSrc) {
+        document.documentElement.style.setProperty('--splash-preload-fit', splashConfig.mediaFit === 'cover' ? 'cover' : 'contain');
+        const isSkinAsset = /^skin-asset:\/\//i.test(splashConfig.mediaSrc);
+        const isVideo = splashConfig.mediaType === 'video' || /^data:video\//i.test(splashConfig.mediaSrc) || /\.(mp4|webm|mov)(\?|#|$)/i.test(splashConfig.mediaSrc);
+        if (!isSkinAsset && !isVideo) {
+          document.documentElement.style.setProperty('--splash-preload-media', `url(${JSON.stringify(splashConfig.mediaSrc)})`);
+        }
+      }
+    })();
+  </script>
+  <style>
+    #app-splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #f2f5f8;
+      background-image: var(--splash-preload-media, radial-gradient(circle at top, rgba(255, 255, 255, 0.96), rgba(242, 245, 248, 0.92) 52%, rgba(232, 236, 241, 0.96) 100%));
+      background-repeat: no-repeat;
+      background-size: var(--splash-preload-fit, contain);
+      background-position: center center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .splash-media-layer {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .splash-custom-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
+      object-position: center center;
+      transform-origin: center center;
+    }
+
+    .splash-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #app-splash.splash-customized::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, var(--splash-overlay-opacity, 0));
+      backdrop-filter: blur(var(--splash-overlay-blur, 0px));
+      -webkit-backdrop-filter: blur(var(--splash-overlay-blur, 0px));
+      z-index: 1;
+    }
+
+    #app-splash.splash-customized .splash-custom-media {
+      border-radius: var(--splash-media-radius, 0px);
+      /* 开屏第一帧必须是不透明图片，不再从 opacity=0 开始淡入。 */
+    }
+
+    #app-splash.splash-customized .splash-content {
+      display: none;
+    }
+
+    .splash-logo {
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    #app-splash.splash-customized .splash-logo {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+      color: #fff;
+    }
+
+    .splash-loader {
+      width: 40px;
+      height: 4px;
+      background: rgba(26, 40, 58, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(26, 40, 58, 0.04);
+    }
+
+    .splash-loader::after {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #7fa8d8, #2f8fff, #7fa8d8);
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    body.app-ready #app-splash,
+    html.not-android #app-splash,
+    html.native-startup #app-splash {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    @keyframes splashFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes splashFadeScale {
+      from { opacity: 0; filter: saturate(0.85); }
+      to { opacity: 1; filter: saturate(1); }
+    }
+
+    @keyframes splashRise {
+      from { opacity: 0; margin-top: 18px; }
+      to { opacity: 1; margin-top: 0; }
+    }
+  </style>
+  <script>
+    (function () {
+      let resolveSplashMediaReady;
+      window.__TY_SPLASH_MEDIA_READY = false;
+      window.__TY_SPLASH_MEDIA_READY_PROMISE = new Promise((resolve) => {
+        resolveSplashMediaReady = resolve;
+      });
+      function signalSplashMediaReady() {
+        if (window.__TY_SPLASH_MEDIA_READY) return;
+        window.__TY_SPLASH_MEDIA_READY = true;
+        resolveSplashMediaReady();
+      }
+
+      const THEME_KEY = 'ty_skin_theme_config_v2';
+      const LEGACY_KEY = 'ty_splash_skin_config_v1';
+
+      function readSplashConfig() {
+        if (window.__TY_PRELOADED_SPLASH_CONFIG) {
+          return window.__TY_PRELOADED_SPLASH_CONFIG;
+        }
+
+        try {
+          const themeRaw = localStorage.getItem(THEME_KEY);
+          if (themeRaw) {
+            const parsedTheme = JSON.parse(themeRaw);
+            const splashTarget = parsedTheme?.targets?.splash_screen;
+            if (splashTarget?.enabled && splashTarget?.mediaSrc) {
+              return {
+                mediaType: splashTarget.mediaType || 'image',
+                mediaSrc: splashTarget.mediaSrc,
+                mediaFit: splashTarget.mediaFit || 'contain',
+                scale: Number(splashTarget.scale || 1),
+                translateX: Number(splashTarget.translateX || 0),
+                translateY: Number(splashTarget.translateY || 0),
+                overlayOpacity: Number(splashTarget.overlayOpacity ?? 0),
+                blur: Number(splashTarget.blur || 0),
+                radius: Number(splashTarget.radius || 0),
+                animationName: splashTarget.animationName || 'fade-scale',
+                animationDurationMs: Number(splashTarget.animationDurationMs || 1200),
+                animationEasing: splashTarget.animationEasing || 'ease-out',
+              };
+            }
+          }
+
+          const legacyRaw = localStorage.getItem(LEGACY_KEY);
+          if (!legacyRaw) return null;
+          const parsedLegacy = JSON.parse(legacyRaw);
+          if (!parsedLegacy?.enabled || !parsedLegacy?.splash?.src) return null;
+          return {
+            mediaType: 'image',
+            mediaSrc: parsedLegacy.splash.src,
+            mediaFit: 'contain',
+            scale: Number(parsedLegacy.splash.scale || 1),
+            translateX: Number(parsedLegacy.splash.translateX || 0),
+            translateY: Number(parsedLegacy.splash.translateY || 0),
+            overlayOpacity: 0,
+            blur: 0,
+            radius: 0,
+            animationName: 'fade-scale',
+            animationDurationMs: 1200,
+            animationEasing: 'ease-out',
+          };
+        } catch {
+          return null;
+        }
+      }
+
+      function getSkinAssetId(src) {
+        const prefix = 'skin-asset://';
+        return typeof src === 'string' && src.startsWith(prefix)
+          ? src.slice(prefix.length).replace(/^\/+/, '').trim()
+          : '';
+      }
+
+      function resolveSkinAssetSrc(src) {
+        const assetId = getSkinAssetId(src);
+        if (!assetId || !window.indexedDB || !window.URL?.createObjectURL) {
+          return Promise.resolve(src);
+        }
+
+        const readOnce = () => new Promise((resolve) => {
+          let blocked = false;
+          let settled = false;
+          const finish = (value) => {
+            if (settled) return;
+            settled = true;
+            resolve(value || '');
+          };
+          const request = indexedDB.open('ty_skin_media_assets_v1', 1);
+          request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains('assets')) db.createObjectStore('assets', { keyPath: 'id' });
+          };
+          request.onerror = () => finish('');
+          request.onblocked = () => {
+            blocked = true;
+            finish('');
+          };
+          request.onsuccess = () => {
+            const db = request.result;
+            if (blocked) {
+              db.close();
+              return;
+            }
+            if (!db.objectStoreNames.contains('assets')) {
+              db.close();
+              finish('');
+              return;
+            }
+            let blob = null;
+            let tx;
+            try {
+              tx = db.transaction('assets', 'readonly');
+              const getRequest = tx.objectStore('assets').get(assetId);
+              getRequest.onsuccess = () => { blob = getRequest.result?.blob || null; };
+              getRequest.onerror = () => { blob = null; };
+              tx.oncomplete = () => {
+                db.close();
+                finish(blob ? URL.createObjectURL(blob) : '');
+              };
+              tx.onerror = tx.onabort = () => {
+                db.close();
+                finish('');
+              };
+            } catch (_) {
+              db.close();
+              finish('');
+            }
+          };
+        });
+
+        return (async () => {
+          for (let attempt = 0; attempt < 3; attempt += 1) {
+            const resolved = await readOnce();
+            if (resolved) return resolved;
+            if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 120 * (attempt + 1)));
+          }
+          return '';
+        })();
+      }
+
+      async function applySplashSkin() {
+        if (window.__TY_NATIVE_SPLASH_ACTIVE) {
+          signalSplashMediaReady();
+          return;
+        }
+        const cfg = readSplashConfig();
+        const splashRoot = document.getElementById('app-splash');
+        const mediaLayer = document.getElementById('app-splash-media-layer');
+        if (!cfg || !splashRoot || !mediaLayer) {
+          signalSplashMediaReady();
+          return;
+        }
+
+        let resolvedMediaSrc = '';
+        try {
+          resolvedMediaSrc = await resolveSkinAssetSrc(cfg.mediaSrc);
+        } catch (_) {
+          signalSplashMediaReady();
+          return;
+        }
+        if (!resolvedMediaSrc) {
+          signalSplashMediaReady();
+          return;
+        }
+
+        const isVideo = cfg.mediaType === 'video' || /^data:video\//i.test(resolvedMediaSrc) || /\.(mp4|webm|mov)(\?|#|$)/i.test(resolvedMediaSrc);
+        const media = document.createElement(isVideo ? 'video' : 'img');
+        media.className = 'splash-custom-media';
+        media.src = resolvedMediaSrc;
+        media.style.objectFit = cfg.mediaFit === 'cover' ? 'cover' : 'contain';
+        media.style.opacity = '0';
+        if (isVideo) {
+          media.autoplay = true;
+          media.muted = true;
+          media.loop = true;
+          media.playsInline = true;
+        }
+
+        const scale = Number(cfg.scale || 1);
+        const tx = Number(cfg.translateX || 0);
+        const ty = Number(cfg.translateY || 0);
+        media.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+        let mediaSettled = false;
+        const loadTimer = window.setTimeout(() => failMedia(), 8000);
+        const showMedia = async () => {
+          if (mediaSettled) return;
+          mediaSettled = true;
+          window.clearTimeout(loadTimer);
+          if (!isVideo && media.decode) await media.decode().catch(() => {});
+          media.style.removeProperty('opacity');
+          splashRoot.classList.add('splash-customized');
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          // 无原生桥接的旧壳也须真正呈现图片，不能在同一帧 load 后立即撤罩。
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          signalSplashMediaReady();
+        };
+        const failMedia = () => {
+          if (mediaSettled) return;
+          mediaSettled = true;
+          window.clearTimeout(loadTimer);
+          media.remove();
+          splashRoot.classList.remove('splash-customized');
+          signalSplashMediaReady();
+        };
+        media.addEventListener(isVideo ? 'loadeddata' : 'load', showMedia, { once: true });
+        media.addEventListener('error', failMedia, { once: true });
+        mediaLayer.appendChild(media);
+        if (!isVideo && media.complete && media.naturalWidth > 0) showMedia();
+        const animationMap = {
+          fade: 'splashFade',
+          'fade-scale': 'splashFadeScale',
+          rise: 'splashRise',
+          'soft-zoom': 'splashFadeScale',
+          none: 'none',
+        };
+        splashRoot.style.setProperty('--splash-overlay-opacity', String(Math.max(0, Math.min(0.85, Number(cfg.overlayOpacity ?? 0)))));
+        splashRoot.style.setProperty('--splash-overlay-blur', `${Math.max(0, Math.min(36, Number(cfg.blur || 0)))}px`);
+        splashRoot.style.setProperty('--splash-media-radius', `${Math.max(0, Math.min(48, Number(cfg.radius || 0)))}px`);
+        splashRoot.style.setProperty('--splash-media-animation', animationMap[cfg.animationName] || 'splashFadeScale');
+        splashRoot.style.setProperty('--splash-animation-duration', `${Math.max(200, Math.min(5000, Number(cfg.animationDurationMs || 1200)))}ms`);
+        splashRoot.style.setProperty('--splash-animation-easing', cfg.animationEasing || 'ease-out');
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applySplashSkin, { once: true });
+      } else {
+        applySplashSkin();
+      }
+    })();
+  </script>
+  <script>
+    // 只要不是安卓 WebView 环境注入，Web 端直接跳过开屏占位
+    if (!window.Android) {
+      document.documentElement.classList.add('not-android');
+    }
+  </script>
+  <script type="module" crossorigin src="./assets/index.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/vendor.js">
+  <link rel="stylesheet" crossorigin href="./assets/index.css">
+</head>
+
+<body>
+  <div id="app-splash">
+    <div class="splash-media-layer" id="app-splash-media-layer"></div>
+    <div class="splash-content">
+      <div class="splash-logo">🎵</div>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+  <div id="app"></div>
+</body>
+
+</html>

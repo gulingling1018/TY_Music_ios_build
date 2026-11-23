@@ -2,7 +2,7 @@
 
 > **本仓库是主仓库 `TY_Music` 中 `ios_player/` 的公开构建镜像，源码公开可见。** 请勿直接在此仓库开发：改动应回到主仓库，再同步过来。本文中 `ios_player/` 前缀在本仓库对应根目录，例如 `python ios_player/scripts/verify-project.py` 对应 `python scripts/verify-project.py`。
 
-这是已批准第17批的A/B阶段产物，供验证原生播放、后台队列、资源容器、SQLite和下载可行性。**已通过GitHub Actions完成Xcode设备版Release编译并产出未签名IPA；尚未在iPhone上运行，不是全功能iOS版本。** 正式Vue界面暂未接入，按计划等B阶段通过后再实施原生完整业务和前端适配。
+这是已批准第17批的A/B阶段产物，供验证原生播放、后台队列、资源容器、SQLite和下载可行性。**已通过GitHub Actions完成Xcode设备版Release编译并产出未签名IPA；尚未在iPhone上运行，不是全功能iOS版本。** 正式Vue界面已接入为默认入口，播放管理、本地搜索和B站下载仍在迁移中。
 
 ## [01] 目录与依赖
 
@@ -114,5 +114,14 @@ xcodebuild -project TYMusicProbe.xcodeproj -scheme TYMusicProbe \
 - 网络地址可能过期；原型不持久保存B站已解析的签名URL，只保存下载记录。手工加入的网络音频地址会存在本机队列恢复文件中，不对外上传。
 - 原生下载完成仅表示得到媒体文件，格式是否能播放仍以AVPlayer实测为准；没有完整转码链。
 - 当前没有Mac，因此Xcode工程格式、Apple SDK类型检查、原生XCTest与iPhone行为均待验收；Windows检查不是iOS编译成功证明。
+
+## [07] 正式前端接入（2026-11-23）
+
+- 默认入口改为`Resources/WebApp/index.html`，即`frontend/dist`的生产构建产物；探针页仍保留在`Resources/Web/index.html`。
+- `tymusic://`自定义scheme根目录改为`Resources`，前端相对资源可直接加载；`/api/cover/*`统一返回内置占位封面。
+- 新增`AndroidAPIHandler`，在文档开始注入`window.Android`兼容层并把`callApiAsync`转给Swift；当前已实现`/api/playlists`与内置歌单空详情，其余接口显式返回501。
+- 构建产物内的`file:///android_asset/`已替换为`tymusic://app/WebApp/`，避免iOS加载Android私有路径。
+- 未完成：真实歌单数据、播放管理、本地搜索、B站下载；按模块继续接入。
+- 复现说明：`frontend/dist`由Vite生产构建生成；当前Vite 7.3.3对该`index.html`的内联样式报html-inline-proxy错误，暂用现有生产产物，修复构建后再改为CI内重建。
 
 方案与契约见`docs/[17]IOS_EXPANSION_PLAN_20261114.md`及`docs/[17]IOS_BRIDGE_CONTRACT_20261114.md`。

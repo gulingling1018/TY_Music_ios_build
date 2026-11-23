@@ -1,0 +1,827 @@
+[data-v-ebd554e8]:root {
+  --bg: var(--ty-page-bg, #e8f8ff);
+  --card: var(--ty-glass-surface-strong, rgba(255, 255, 255, 0.8));
+  --text-main: #1d1d1f;
+  --text-sub: #6e6e73;
+  --accent: var(--ty-color-accent, #0071e3);
+  --blur: saturate(180%) blur(20px);
+}
+[data-v-ebd554e8] {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
+}
+button[data-v-ebd554e8] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  outline: none;
+  border: none;
+  background-image: none !important;
+}
+button[data-v-ebd554e8]:focus,
+button[data-v-ebd554e8]:focus-visible,
+button[data-v-ebd554e8]:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+.player-container[data-v-ebd554e8] {
+  --text-main: var(--ty-player-control-text, #1d1d1f);
+  --text-sub: var(--ty-player-control-muted, #6e6e73);
+  --accent: var(--ty-player-control-progress, #0071e3);
+  --ty-song-button: var(--ty-player-control-button, #1d1d1f);
+  --ty-song-progress: var(--ty-player-control-progress, #66ccff);
+  --ty-song-progress-radius: var(--ty-player-control-progress-radius, 999px);
+  --ty-song-item-gap: var(--ty-player-control-gap, 10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+.player-container[data-v-ebd554e8]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    var(--gradient-overlay),
+    var(--bg-image, var(--ty-page-bg-image, linear-gradient(135deg, #f8fdff 0%, #dff5ff 100%)));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(40px) saturate(1.6);
+  z-index: -1;
+}
+.player[data-v-ebd554e8] {
+  width: 100vw;
+  height: 100vh;
+  background: color-mix(in srgb, var(--card, rgba(255, 255, 255, 0.82)) 88%, transparent);
+  backdrop-filter: var(--ty-glass-filter, blur(18px));
+  -webkit-backdrop-filter: var(--ty-glass-filter, blur(18px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 上半部分：封面 */
+.upper-section[data-v-ebd554e8] {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 60px 20px 20px;
+  min-height: 0;
+}
+
+/* 视频模式下的上半部分调整 */
+.upper-section.video-active[data-v-ebd554e8] {
+  padding: 10px 5px 10px;
+}
+.album[data-v-ebd554e8] {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1;
+  border-radius: var(--ty-player-control-cover-radius, var(--ty-container-radius, 20px));
+  background: linear-gradient(135deg, #cdeeff, #f2fbff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(61, 157, 207, 0.2);
+  position: relative;
+  /* 确保视频也遵循圆角 */
+  overflow: hidden; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* 视频激活时的样式 */
+.album.video-active[data-v-ebd554e8] {
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+}
+.video-container[data-v-ebd554e8] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: #000;
+  transition: all 0.3s ease;
+}
+.bili-iframe[data-v-ebd554e8] {
+  width: 100%;
+  height: 100%;
+  /* 视频模式下使用contain保持比例，避免变形 */
+  object-fit: contain;
+  display: block;
+}
+
+/* CSS 全屏：视频容器脱离文档流覆盖整个视口，不影响 App 其余页面 */
+.video-container.is-fullscreen[data-v-ebd554e8] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  width: 100dvw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 99999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  overflow: hidden;
+}
+.video-container.is-fullscreen .bili-iframe[data-v-ebd554e8] {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* 全屏时控件始终在视频之上 */
+.video-container.is-fullscreen .video-controls[data-v-ebd554e8] {
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 10px;
+  padding: 8px 16px;
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+}
+.video-container.is-fullscreen .video-overlay[data-v-ebd554e8] {
+  z-index: 20;
+}
+.video-overlay[data-v-ebd554e8] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: none; /* 默认穿透，允许操作视频 */
+}
+.video-overlay.is-blocking[data-v-ebd554e8] {
+  pointer-events: auto; /* 当控件隐藏时，遮罩层拦截所有事件用于唤醒 */
+}
+
+/* 自动播放遮罩层 */
+.autoplay-blocker[data-v-ebd554e8] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  animation: fadeIn-ebd554e8 0.2s ease;
+}
+@keyframes fadeIn-ebd554e8 {
+from {
+    opacity: 0;
+}
+to {
+    opacity: 1;
+}
+}
+.loading-spinner[data-v-ebd554e8] {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-ebd554e8 0.8s linear infinite;
+}
+@keyframes spin-ebd554e8 {
+to {
+    transform: rotate(360deg);
+}
+}
+.loading-text[data-v-ebd554e8] {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.video-controls[data-v-ebd554e8] {
+  --video-btn-size: 36px;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 隐藏时的样式 */
+.video-controls[style*="opacity: 0"][data-v-ebd554e8] {
+  pointer-events: none;
+  visibility: hidden;
+}
+.ctrl-btn[data-v-ebd554e8] {
+  width: var(--video-btn-size);
+  height: var(--video-btn-size);
+  flex: 0 0 var(--video-btn-size);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: white;
+  border-radius: 999px;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.album-img.video-playing[data-v-ebd554e8] {
+  opacity: 0;
+}
+.album-img[data-v-ebd554e8] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 下半部分：信息和控件 */
+.lower-section[data-v-ebd554e8] {
+  flex: 0 0 auto;
+  padding: 24px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ty-song-item-gap, 10px) * 2);
+  background: linear-gradient(180deg, transparent, rgba(232, 248, 255, 0.34));
+}
+.track-info[data-v-ebd554e8] {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title[data-v-ebd554e8] {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
+  width: 61.8%;
+  margin-bottom: 4px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.title.video-static[data-v-ebd554e8] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.artist[data-v-ebd554e8] {
+  font-size: 14px;
+  color: var(--text-sub);
+  width: 61.8%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.artist.video-static[data-v-ebd554e8] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tool-btn[data-v-ebd554e8] {
+  width: var(--tool-btn-size);
+  height: var(--tool-btn-size);
+  flex: 0 0 var(--tool-btn-size);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--ty-song-button, var(--text-main));
+  opacity: 0.78;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: none;
+  outline: none;
+  box-shadow: none;
+}
+.tool-btn[data-v-ebd554e8]:hover,
+.tool-btn[data-v-ebd554e8]:active,
+.tool-btn[data-v-ebd554e8]:focus,
+.tool-btn[data-v-ebd554e8]:focus-visible {
+  opacity: 1;
+  transform: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+/* 进度条区域 */
+.progress[data-v-ebd554e8] {
+  padding: 0 4px;
+  position: relative;
+}
+.progress-info[data-v-ebd554e8] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.current-time[data-v-ebd554e8] {
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-main) 72%, #5874c8);
+  min-width: 38px;
+  text-align: right;
+}
+.bar[data-v-ebd554e8] {
+  flex: 1;
+  height: 36px;
+  background: transparent;
+  border-radius: 999px;
+  overflow: visible;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  touch-action: none;
+}
+.bar.disabled[data-v-ebd554e8] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.bar-buffered[data-v-ebd554e8] {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 10px;
+  transform: translateY(-50%);
+  background: color-mix(in srgb, #9fb6ff 24%, transparent);
+  border-radius: 999px;
+  z-index: 1;
+}
+.bar[data-v-ebd554e8]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(#eef1f7, #dfe4ee);
+  box-shadow:
+    inset 0 1px 2px rgba(70, 90, 140, 0.18),
+    0 1px 4px rgba(130, 150, 200, 0.14);
+  z-index: 0;
+}
+.bar-fill[data-v-ebd554e8] {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      90deg,
+      #6f8cff 0%,
+      #8a8fff 45%,
+      #79c9ff 75%,
+      #7ee7ef 100%
+    );
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.45),
+    0 0 8px rgba(118, 139, 255, 0.28);
+  z-index: 2;
+}
+.progress-flow[data-v-ebd554e8] {
+  position: absolute;
+  inset: -12px 0;
+  opacity: 0.34;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background-image: url("../svg/progress-flow.svg");
+  background-size: auto 100%;
+  background-position: 0 50%;
+  background-repeat: repeat-x;
+  filter: blur(0.15px);
+  animation: progressFlowMove-ebd554e8 8s linear infinite;
+}
+.progress-flow[data-v-ebd554e8]::before,
+.progress-flow[data-v-ebd554e8]::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  top: 50%;
+  width: 140%;
+  height: 14px;
+  border-radius: 50%;
+  border-top: 1px solid rgba(255, 255, 255, 0.38);
+  animation: progressHelixA-ebd554e8 8s linear infinite;
+}
+.progress-flow[data-v-ebd554e8]::after {
+  border-top-color: rgba(205, 230, 255, 0.32);
+  animation-name: progressHelixB-ebd554e8;
+}
+.progress-streak[data-v-ebd554e8] {
+  position: absolute;
+  top: 50%;
+  width: clamp(56px, 16vw, 100px);
+  height: 30px;
+  transform: translate(-8px, -50%);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.54;
+  mix-blend-mode: screen;
+}
+.progress-streak img[data-v-ebd554e8] {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
+  animation: progressStreakFloat-ebd554e8 4.8s ease-in-out infinite;
+}
+.progress-thumb[data-v-ebd554e8] {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border-radius: 50%;
+  opacity: 0.92;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+.progress-thumb img[data-v-ebd554e8] {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.bar:hover .progress-thumb[data-v-ebd554e8],
+.bar.is-dragging .progress-thumb[data-v-ebd554e8] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.total-time[data-v-ebd554e8] {
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-main) 72%, #5874c8);
+  min-width: 38px;
+  text-align: left;
+}
+@keyframes progressFlowMove-ebd554e8 {
+from {
+    background-position: 0 50%;
+}
+to {
+    background-position: 160px 50%;
+}
+}
+@keyframes progressHelixA-ebd554e8 {
+0%,
+  100% {
+    transform: translateY(-5px) skewX(-18deg);
+    opacity: 0.24;
+}
+50% {
+    transform: translateY(5px) skewX(18deg);
+    opacity: 0.5;
+}
+}
+@keyframes progressHelixB-ebd554e8 {
+0%,
+  100% {
+    transform: translateY(5px) skewX(18deg);
+    opacity: 0.42;
+}
+50% {
+    transform: translateY(-5px) skewX(-18deg);
+    opacity: 0.18;
+}
+}
+@keyframes progressStreakFloat-ebd554e8 {
+0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.58;
+}
+50% {
+    transform: translateY(-3px);
+    opacity: 0.86;
+}
+}
+
+/* 控制按钮 */
+.controls[data-v-ebd554e8] {
+  --tool-btn-size: 42px;
+  --transport-btn-size: 46px;
+  --play-btn-size: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(12px, calc(var(--ty-song-item-gap, 10px) * 2.2), 48px);
+  padding: 0 20px;
+}
+.control-center[data-v-ebd554e8] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(14px, calc(var(--ty-song-item-gap, 10px) * 2.4), 28px);
+}
+.mode-btn .svg-icon-wrapper[data-v-ebd554e8] {
+  transform: none;
+}
+
+/* 播放模式提示 Toast */
+.mode-toast[data-v-ebd554e8] {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+/* Bilibili 授权状态徽章 */
+.bili-auth-badge[data-v-ebd554e8] {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: linear-gradient(135deg, #00a1d6 0%, #00b5e5 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 161, 214, 0.3);
+  backdrop-filter: blur(4px);
+}
+.badge-icon[data-v-ebd554e8] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 10px;
+}
+.fade-toast-enter-active[data-v-ebd554e8],
+.fade-toast-leave-active[data-v-ebd554e8] {
+  transition: opacity 0.3s ease;
+}
+.fade-toast-enter-from[data-v-ebd554e8],
+.fade-toast-leave-to[data-v-ebd554e8] {
+  opacity: 0;
+}
+
+/* 授权徽章折叠动画 */
+.slide-down-enter-active[data-v-ebd554e8] {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.slide-down-leave-active[data-v-ebd554e8] {
+  transition: all 0.3s ease-in;
+}
+.slide-down-enter-from[data-v-ebd554e8] {
+  opacity: 0;
+  transform: translateY(-100%) scale(0.8);
+}
+.slide-down-leave-to[data-v-ebd554e8] {
+  opacity: 0;
+  transform: translateY(-100%) scale(0.8);
+}
+.slide-down-enter-to[data-v-ebd554e8],
+.slide-down-leave-from[data-v-ebd554e8] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.btn[data-v-ebd554e8] {
+  width: var(--transport-btn-size);
+  height: var(--transport-btn-size);
+  flex: 0 0 var(--transport-btn-size);
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--ty-song-button, var(--text-main));
+  opacity: 0.82;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: none;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn[data-v-ebd554e8]:hover,
+.btn[data-v-ebd554e8]:active,
+.btn[data-v-ebd554e8]:focus,
+.btn[data-v-ebd554e8]:focus-visible {
+  opacity: 1;
+  transform: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.btn.play[data-v-ebd554e8] {
+  width: var(--play-btn-size);
+  height: var(--play-btn-size);
+  flex-basis: var(--play-btn-size);
+  font-size: 24px;
+  background: transparent !important;
+  color: var(--ty-song-button, var(--text-main));
+  opacity: 1;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* 确保在所有平台上保持一致的样式 */
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn.play[data-v-ebd554e8]:hover,
+.btn.play[data-v-ebd554e8]:active,
+.btn.play[data-v-ebd554e8]:focus,
+.btn.play[data-v-ebd554e8]:focus-visible {
+  opacity: 1;
+  transform: none;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.btn.play[data-v-ebd554e8]:disabled {
+  background: transparent !important;
+  cursor: not-allowed;
+  opacity: 0.4;
+  border: none !important;
+  box-shadow: none !important;
+}
+@media (max-height: 700px) {
+.upper-section[data-v-ebd554e8] {
+    padding: 20px 20px 10px;
+}
+.album[data-v-ebd554e8] {
+    max-width: 250px;
+}
+.lower-section[data-v-ebd554e8] {
+    padding: 16px 20px 24px;
+    gap: 12px;
+}
+.title[data-v-ebd554e8] {
+    font-size: 18px;
+}
+}
+@media (max-width: 600px) {
+.player[data-v-ebd554e8] {
+    width: 100vw;
+}
+.album[data-v-ebd554e8] {
+    max-width: 250px;
+}
+.title[data-v-ebd554e8] {
+    font-size: 18px;
+}
+.toolbar[data-v-ebd554e8] {
+    gap: 30px;
+}
+.controls[data-v-ebd554e8] {
+    --tool-btn-size: 50px;
+    --transport-btn-size: 64px;
+    --play-btn-size: 80px;
+    padding: 0 0px;
+}
+.control-center[data-v-ebd554e8] {
+    gap: 12px;
+}
+.video-controls[data-v-ebd554e8] {
+    --video-btn-size: 32px;
+    top: 10px;
+    right: 10px;
+    gap: 8px;
+}
+}
+
+/* 歌词显示区域 */
+.lyrics-section[data-v-ebd554e8] {
+  position: relative;
+  overflow: hidden;
+  height: 18vh; /* 固定高度，无论有没有歌词都占位 */
+}
+.lyrics-wrapper[data-v-ebd554e8] {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* 歌词行基础样式 */
+.lyrics-line[data-v-ebd554e8] {
+  height: 34px; /* 固定行高 */
+  line-height: 34px;
+  text-align: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+/* 正在播放的歌词行样式 */
+.lyrics-line.active[data-v-ebd554e8] {
+  opacity: 1;
+  color: var(--ty-song-progress, #66ccff);
+  font-weight: 600;
+}
+
+
+/* 歌词容器的滚动条样式 - 已移除，因为使用绝对定位 */
+
+/* SVG 图标样式 */
+.btn-icon[data-v-ebd554e8] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  pointer-events: none;
+  overflow: hidden;
+}
+.btn-icon--tool[data-v-ebd554e8] {
+  width: 48px;
+  height: 48px;
+}
+.btn-icon--transport[data-v-ebd554e8] {
+  width: 32px;
+  height: 32px;
+}
+.btn-icon--play[data-v-ebd554e8] {
+  width: 40px;
+  height: 40px;
+}
+.btn-icon--video[data-v-ebd554e8] {
+  width: 55px;
+  height: 55px;
+}
+.btn-icon[data-v-ebd554e8] .svg-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.btn-icon[data-v-ebd554e8] svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 600px) {
+.btn-icon--tool[data-v-ebd554e8] {
+    width: 55px;
+    height: 55px;
+}
+.btn-icon--transport[data-v-ebd554e8] {
+    width: 75px;
+    height: 75px;
+}
+.btn-icon--play[data-v-ebd554e8] {
+    width: 80px;
+    height: 80px;
+}
+.btn-icon--video[data-v-ebd554e8] {
+    width: 80px;
+    height: 80px;
+}
+}
