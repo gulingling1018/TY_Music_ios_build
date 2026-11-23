@@ -1,0 +1,22 @@
+{
+  "source": "music_cache.db",
+  "totalBytes": 106979328,
+  "sha256": "69db96e3cdc4e808a672ea5a95457613cb6917f1a3320ea5be514b9bbd01d415",
+  "parts": [
+    {
+      "name": "music_cache.db.part001",
+      "size": 35659776,
+      "sha256": "64cc9da0dd9daae34a23477a728a9f8329f6e51bfc62154850181b7d62923d96"
+    },
+    {
+      "name": "music_cache.db.part002",
+      "size": 35659776,
+      "sha256": "5d741b4a5cb54e833e511c8ce467d35d70595e112e87a81c4ba56ecff62f3bf6"
+    },
+    {
+      "name": "music_cache.db.part003",
+      "size": 35659776,
+      "sha256": "935942fd09181cd96b2bd483090cc18c034d7dbf5cc3d9157db4f19c0e96e42b"
+    }
+  ]
+}
