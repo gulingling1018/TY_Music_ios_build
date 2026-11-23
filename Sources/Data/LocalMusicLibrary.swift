@@ -63,7 +63,7 @@ final class LocalMusicLibrary {
         return title.isEmpty ? track.title : title
     }
 
-    private static func payload(for track: AudioTrack) -> [String: Any]? {
+    static func payload(for track: AudioTrack) -> [String: Any]? {
         guard let relative = track.relativePath else { return nil }
         let encoded = relative.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return [

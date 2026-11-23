@@ -2,7 +2,7 @@
 
 > **本仓库是主仓库 `TY_Music` 中 `ios_player/` 的公开构建镜像，源码公开可见。** 请勿直接在此仓库开发：改动应回到主仓库，再同步过来。本文中 `ios_player/` 前缀在本仓库对应根目录，例如 `python ios_player/scripts/verify-project.py` 对应 `python scripts/verify-project.py`。
 
-这是已批准第17批的A/B阶段产物，供验证原生播放、后台队列、资源容器、SQLite和下载可行性。**已通过GitHub Actions完成Xcode设备版Release编译并产出未签名IPA；尚未在iPhone上运行，不是全功能iOS版本。** 正式Vue界面已接入为默认入口，播放管理、本地搜索和B站下载仍在迁移中。
+这是已批准第17批的A/B阶段产物，供验证原生播放、后台队列、资源容器、SQLite和下载可行性。**已通过GitHub Actions完成Xcode设备版Release编译并产出未签名IPA；尚未在iPhone上运行，不是全功能iOS版本。** 正式Vue界面已接入为默认入口，播放管理、本地搜索和B站下载已接入首版；自定义歌单、B站登录/收藏夹和完整离线索引仍在迁移中。
 
 ## [01] 目录与依赖
 
@@ -124,7 +124,8 @@ xcodebuild -project TYMusicProbe.xcodeproj -scheme TYMusicProbe \
 - 构建产物内的`file:///android_asset/`已替换为`tymusic://app/WebApp/`，避免iOS加载Android私有路径。
 - 本地搜索：`GET /api/search`对已导入本地音乐按标题过滤并分页；完整离线索引（`music_cache.db`，102 MB）尚未内置，计划拆分到GitHub单文件限制以下后接入。
 - 搜索库拆分：`scripts/split-search-db.py`把`music_cache.db`切成3个约34 MB分片并生成`manifest.json`（含SHA256）；分片存放在构建仓库`SearchDataParts/`，暂不进入IPA，完整索引搜索接入时再按清单组装校验。
-- 未完成：自定义歌单数据、B站下载；按模块继续接入。
+- B站下载：匿名视频搜索（2-5分钟、按播放量排序）、DASH音频解析、URLSession后台下载，以及任务列表/暂停/恢复/取消/重试和「下载」歌单已接入。
+- 未完成：自定义歌单数据、B站登录/收藏夹、完整离线索引搜索；按模块继续接入。
 - 复现说明：`frontend/dist`由Vite生产构建生成；当前Vite 7.3.3对该`index.html`的内联样式报html-inline-proxy错误，暂用现有生产产物，修复构建后再改为CI内重建。
 
 方案与契约见`docs/[17]IOS_EXPANSION_PLAN_20261114.md`及`docs/[17]IOS_BRIDGE_CONTRACT_20261114.md`。
