@@ -3,8 +3,15 @@ import WebKit
 import UniformTypeIdentifiers
 
 final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
+    private final class TaskBox {
+        let task: WKURLSchemeTask
+        var stopped = false
+        init(_ task: WKURLSchemeTask) { self.task = task }
+    }
+
     private let root: URL
     private let mediaRoot: URL
+    private var boxes: [ObjectIdentifier: TaskBox] = [:]
 
     init(root: URL, mediaRoot: URL) {
         self.root = root
@@ -12,6 +19,10 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
     }
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        let box = TaskBox(urlSchemeTask)
+        boxes[ObjectIdentifier(urlSchemeTask)] = box
+        defer { boxes.removeValue(forKey: ObjectIdentifier(urlSchemeTask)) }
+
         do {
             guard let url = urlSchemeTask.request.url, PathPolicy.trustedPage(url) else {
                 throw ProbeError.invalid("不支持的资源请求")
@@ -23,12 +34,12 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
 
             // 前端直接 <img src="/api/cover/..."> 的请求走这里；第一阶段统一返回内置占位封面。
             if url.path.hasPrefix("/api/cover/") {
-                try sendPlaceholderCover(url: url, method: method, task: urlSchemeTask)
+                try sendPlaceholderCover(url: url, method: method, box: box)
                 return
             }
             // 前端把本地音频拼成 /api/stream_local?path=<相对路径>，这里按 Range 提供文件。
             if url.path == "/api/stream_local" {
-                try sendLocalMedia(url: url, method: method, task: urlSchemeTask)
+                try sendLocalMedia(url: url, method: method, box: box)
                 return
             }
             guard method == "GET" else { throw ProbeError.invalid("不支持的资源请求") }
@@ -39,29 +50,35 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
             let bytes = try Data(contentsOf: file)
             let explicit = ["js": "application/javascript", "mjs": "application/javascript", "css": "text/css", "html": "text/html", "json": "application/json", "svg": "image/svg+xml"]
             let mime = explicit[file.pathExtension] ?? UTType(filenameExtension: file.pathExtension)?.preferredMIMEType ?? "application/octet-stream"
-            urlSchemeTask.didReceive(URLResponse(url: url, mimeType: mime, expectedContentLength: bytes.count,
-                                                textEncodingName: ["js", "mjs", "css", "html", "json", "svg"].contains(file.pathExtension) ? "utf-8" : nil))
-            urlSchemeTask.didReceive(bytes)
-            urlSchemeTask.didFinish()
-        } catch { urlSchemeTask.didFailWithError(error) }
+            guard !box.stopped else { return }
+            box.task.didReceive(URLResponse(url: url, mimeType: mime, expectedContentLength: bytes.count,
+                                            textEncodingName: ["js", "mjs", "css", "html", "json", "svg"].contains(file.pathExtension) ? "utf-8" : nil))
+            if !box.stopped { box.task.didReceive(bytes) }
+            if !box.stopped { box.task.didFinish() }
+        } catch {
+            if !box.stopped { box.task.didFailWithError(error) }
+        }
     }
 
-    // 当前只同步读取小型内置原型资源，不保留异步task，stop后不会回调已结束task。
-    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {}
+    // 快速拖动时会停止旧的 Range 任务；设置标记后不再回调，避免对已停止任务调用 didReceive。
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        boxes[ObjectIdentifier(urlSchemeTask)]?.stopped = true
+    }
 
-    private func sendPlaceholderCover(url: URL, method: String, task: WKURLSchemeTask) throws {
+    private func sendPlaceholderCover(url: URL, method: String, box: TaskBox) throws {
         let data = Data(Self.placeholderCoverSvg.utf8)
         guard let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1",
                                              headerFields: ["Content-Type": "image/svg+xml",
                                                             "Content-Length": "\(data.count)"]) else {
             throw ProbeError.invalid("无法构造封面响应")
         }
-        task.didReceive(response)
-        if method != "HEAD" { task.didReceive(data) }
-        task.didFinish()
+        guard !box.stopped else { return }
+        box.task.didReceive(response)
+        if method != "HEAD", !box.stopped { box.task.didReceive(data) }
+        if !box.stopped { box.task.didFinish() }
     }
 
-    private func sendLocalMedia(url: URL, method: String, task: WKURLSchemeTask) throws {
+    private func sendLocalMedia(url: URL, method: String, box: TaskBox) throws {
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         guard let relative = components?.queryItems?.first(where: { $0.name == "path" })?.value,
               !relative.isEmpty else {
@@ -85,7 +102,7 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
             "Cache-Control": "no-store"
         ]
 
-        if total > 0, let rawRange = task.request.value(forHTTPHeaderField: "Range"), rawRange.hasPrefix("bytes=") {
+        if total > 0, let rawRange = box.task.request.value(forHTTPHeaderField: "Range"), rawRange.hasPrefix("bytes=") {
             let spec = String(rawRange.dropFirst("bytes=".count))
             let parts = spec.split(separator: "-", maxSplits: 1, omittingEmptySubsequences: false)
             if parts.count == 2 {
@@ -113,9 +130,10 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
                                              headerFields: headers) else {
             throw ProbeError.invalid("无法构造音频响应")
         }
-        task.didReceive(response)
+        guard !box.stopped else { return }
+        box.task.didReceive(response)
         guard method != "HEAD", total > 0 else {
-            task.didFinish()
+            if !box.stopped { box.task.didFinish() }
             return
         }
 
@@ -123,13 +141,13 @@ final class BundledSchemeHandler: NSObject, WKURLSchemeHandler {
         defer { try? handle.close() }
         try handle.seek(toOffset: UInt64(start))
         var remaining = end - start + 1
-        while remaining > 0 {
+        while remaining > 0, !box.stopped {
             let chunk = try handle.read(upToCount: Int(min(remaining, 256 * 1024))) ?? Data()
             if chunk.isEmpty { break }
-            task.didReceive(chunk)
+            box.task.didReceive(chunk)
             remaining -= Int64(chunk.count)
         }
-        task.didFinish()
+        if !box.stopped { box.task.didFinish() }
     }
 
     private static let placeholderCoverSvg = """
