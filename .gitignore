@@ -2,6 +2,6 @@ build/
 DerivedData/
 *.xcuserstate
 xcuserdata/
-Resources/SearchData/*.db
+AppAssets/SearchData/*.db
 *.ipa
 *.xcarchive
