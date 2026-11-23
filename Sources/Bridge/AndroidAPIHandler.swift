@@ -69,6 +69,9 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
         if method == "GET", path == "/api/scan-progress" {
             return scanProgressEnvelope()
         }
+        if method == "GET", path == "/api/search" {
+            return searchEnvelope(items: components.queryItems)
+        }
         if method == "GET", path == "/api/playlists" {
             return ["status": 200, "data": ["playlists": pinnedPlaylists()]]
         }
@@ -150,6 +153,24 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
             "count": scan.count,
             "message": scan.message,
             "error": (scan.error as Any?) ?? NSNull()
+        ]]
+    }
+
+    private func searchEnvelope(items: [URLQueryItem]?) -> [String: Any] {
+        let keyword = items?.first(where: { $0.name == "q" })?.value ?? ""
+        let page = max(1, Int(items?.first(where: { $0.name == "page" })?.value ?? "") ?? 1)
+        let limit = min(100, max(1, Int(items?.first(where: { $0.name == "limit" })?.value ?? "") ?? 30))
+        let result = runtime.library.search(keyword, page: page, limit: limit)
+        return ["status": 200, "data": [
+            "success": true,
+            "songs": result.songs,
+            "page": page,
+            "pageSize": limit,
+            "limit": limit,
+            "resultCount": result.total,
+            "hasMore": result.hasMore,
+            "searchKind": "local",
+            "asyncSearchPending": false
         ]]
     }
 
