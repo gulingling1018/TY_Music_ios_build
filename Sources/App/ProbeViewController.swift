@@ -53,7 +53,7 @@ final class ProbeViewController: UIViewController, WKNavigationDelegate {
     private func emit(_ name: String, _ data: [String: Any]) {
         guard PathPolicy.trustedPage(webView.url) else { return }
         webView.callAsyncJavaScript("window.dispatchEvent(new CustomEvent('tymusic:native', {detail: {name, data}}));",
-                                   arguments: ["name": name, "data": data], in: nil, contentWorld: .page) { _ in }
+                                   arguments: ["name": name, "data": data], in: nil, in: .page) { _ in }
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
