@@ -11,6 +11,11 @@ on:
         required: false
         default: ''
         type: string
+      run_simulator_tests:
+        description: '可选：运行模拟器 XCTest（Xcode 26.6 + iOS 26.5 上可能因运行时问题失败）'
+        required: false
+        default: false
+        type: boolean
   push:
     branches: [main]
   pull_request:
@@ -141,6 +146,7 @@ jobs:
 
       - name: 编译模拟器版本（ad-hoc 签名）
         id: simulator-build
+        if: inputs.run_simulator_tests
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -206,7 +212,7 @@ jobs:
             test 2>&1 | tee build/test.log
 
       - name: 上传测试报告
-        if: always()
+        if: always() && inputs.run_simulator_tests
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-tests
