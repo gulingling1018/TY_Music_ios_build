@@ -91,6 +91,14 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee build/build-device.log
 
+      - name: ad-hoc 预签名（便于 Sideloadly 等工具重签）
+        run: |
+          set -euo pipefail
+          APP="${DERIVED_DATA}/Build/Products/Release-iphoneos/${SCHEME}.app"
+          test -d "${APP}"
+          /usr/bin/codesign --force --sign - "${APP}"
+          /usr/bin/codesign --verify --verbose=2 "${APP}"
+
       - name: 打包未签名 IPA
         run: |
           set -euo pipefail
