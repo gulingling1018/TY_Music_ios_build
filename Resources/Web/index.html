@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' tymusic:; script-src 'self' tymusic: blob:; style-src 'self' tymusic:; img-src 'self' tymusic: blob: data:; worker-src 'self' tymusic: blob:; connect-src 'self' tymusic:; frame-src 'none'; object-src 'none'; base-uri 'none'">
+  <title>TY音乐 iOS 验证</title>
+  <link rel="stylesheet" href="probe.css">
+</head>
+<body>
+  <main>
+    <h1>TY音乐 iOS 验证</h1>
+    <p>第17批风险原型。正式界面和全功能移植尚未接入。</p>
+    <section aria-labelledby="resources-title">
+      <h2 id="resources-title">资源与存储</h2>
+      <button id="resources">检测资源能力</button>
+      <button id="sqlite">检测原生 SQLite</button>
+      <pre id="resource-state">等待检测</pre>
+      <img id="image-probe" src="probe.svg" width="32" height="32" alt="资源图片探针">
+    </section>
+    <section aria-labelledby="audio-title">
+      <h2 id="audio-title">音频与原生队列</h2>
+      <button id="import">导入音频</button>
+      <label>HTTPS音频地址<input id="audio-url" type="url" placeholder="https://…" autocomplete="off"></label>
+      <button id="remote">添加网络音频</button>
+      <div class="controls"><button data-command="previous">上一首</button><button data-command="play">播放</button><button data-command="pause">暂停</button><button data-command="next">下一首</button></div>
+      <label>播放模式<select id="mode"><option value="loop_list">列表循环</option><option value="loop_single">单曲循环</option><option value="shuffle">随机播放</option></select></label>
+      <label>定位（秒）<input id="seek" type="number" min="0" value="0"></label><button id="seek-button">定位</button>
+      <button id="refresh">刷新原生状态</button><button id="clear">清空队列</button>
+      <pre id="playback-state">等待原生快照</pre>
+    </section>
+    <section aria-labelledby="download-title">
+      <h2 id="download-title">下载链路</h2>
+      <label>BV号或视频完整地址<input id="bili-input" type="text" autocomplete="off"></label>
+      <label>分P<input id="bili-page" type="number" min="1" max="10000" value="1"></label>
+      <button id="bili-download">解析并下载匿名DASH音频</button>
+      <button id="direct-download">下载上方HTTPS音频</button>
+      <button id="load-downloads">将已下载音频加入队列</button>
+      <div id="download-actions"></div>
+      <pre id="download-state">等待原生快照</pre>
+    </section>
+    <p id="message" role="status" aria-live="polite"></p>
+    <details><summary>原生能力状态</summary><pre id="native-info"></pre></details>
+  </main>
+  <script type="module" src="probe.mjs"></script>
+</body>
+</html>

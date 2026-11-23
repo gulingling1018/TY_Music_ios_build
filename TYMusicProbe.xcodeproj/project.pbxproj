@@ -1,0 +1,532 @@
+// !$*UTF8*$!
+{
+	"archiveVersion" = 1;
+	"classes" = {
+
+	};
+	"objectVersion" = 56;
+	"objects" = {
+		"007EEE7810ED671C0930794B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Domain/NativePlaybackService.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"027611F255F56D1812D56062" = {
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"DEVELOPMENT_TEAM" = "";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"INFOPLIST_FILE" = "Config/Info.plist";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe";
+				"PRODUCT_NAME" = "TYMusicProbe";
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_VERSION" = "5.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+		};
+		"0691E6B56FB6AEEBB3B8233C" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Tests/PlaybackQueueTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"0704D9093736082255489757" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Data/MediaFileStore.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"08CEF51427A923A5F4E03211" = {
+			"fileRef" = "A8784816A70424A3A63250ED";
+			"isa" = "PBXBuildFile";
+		};
+		"0D1EBDB686FF57B98B90B431" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/App/SceneDelegate.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"0F4D4B2A447776D9D9EDA57A" = {
+			"fileRef" = "6DB0934527C44DB45713D695";
+			"isa" = "PBXBuildFile";
+		};
+		"13D58F750C9F7A867F986420" = {
+			"buildActionMask" = 2147483647;
+			"files" = ("39E5E7903F02B718D432099C");
+			"isa" = "PBXFrameworksBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"1C01DB8E021279885496CD6B" = {
+			"fileRef" = "931BC89703BCEDAFD631F3B2";
+			"isa" = "PBXBuildFile";
+		};
+		"1FED7940D0AD19FC201DD435" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.xml";
+			"path" = "Config/Info.plist";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"244210E48437B6556980A702" = {
+			"attributes" = {
+				"LastUpgradeCheck" = "1600";
+				"TargetAttributes" = {
+					"2ADDEE89B29C55E11126D89F" = {
+						"CreatedOnToolsVersion" = "16.0";
+						"TestTargetID" = "8C1A045E96B998B40533C7FF";
+					};
+					"8C1A045E96B998B40533C7FF" = {
+						"CreatedOnToolsVersion" = "16.0";
+					};
+				};
+			};
+			"buildConfigurationList" = "54972615C880599A4265A739";
+			"compatibilityVersion" = "Xcode 14.0";
+			"developmentRegion" = "zh_CN";
+			"isa" = "PBXProject";
+			"knownRegions" = ("zh_CN", "en", "Base");
+			"mainGroup" = "AA0596BBDB4DCC95D5D4F10C";
+			"productRefGroup" = "6F7199ED7B63CDA338A0FB82";
+			"projectDirPath" = "";
+			"projectRoot" = "";
+			"targets" = ("8C1A045E96B998B40533C7FF", "2ADDEE89B29C55E11126D89F");
+		};
+		"2ADDEE89B29C55E11126D89F" = {
+			"buildConfigurationList" = "BB63AC07C944A2DA76599CB9";
+			"buildPhases" = ("923019BD38FF97989F221A61", "C4EECED6B022BF4B525F7174", "E4BB408D666ACFAF1A684EC9");
+			"buildRules" = ();
+			"dependencies" = ("B1F33F0DF5D562F7B2106E58");
+			"isa" = "PBXNativeTarget";
+			"name" = "TYMusicProbeTests";
+			"productName" = "TYMusicProbeTests";
+			"productReference" = "70F09BF32F6D77A92FF191B4";
+			"productType" = "com.apple.product-type.bundle.unit-test";
+		};
+		"31209E75ED392D5808D8E7C7" = {
+			"fileRef" = "88F437E5DF839B61EA6C0BA4";
+			"isa" = "PBXBuildFile";
+		};
+		"327F797AF8E71C15F5EA9367" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Tests/PathAndBridgeTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"376168C57173C726A3F6A97B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/App/ProbeRuntime.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"39E5E7903F02B718D432099C" = {
+			"fileRef" = "71DB64AD7B9A645942748940";
+			"isa" = "PBXBuildFile";
+		};
+		"49CB9BEF13C3A6676737FB3C" = {
+			"fileRef" = "C64D05C235AEAF3A95BC8284";
+			"isa" = "PBXBuildFile";
+		};
+		"54972615C880599A4265A739" = {
+			"buildConfigurations" = ("E2EDCD14762CC2F70971BC55", "E49449A51B1C1B61FFEBC152");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+			"isa" = "XCConfigurationList";
+		};
+		"596B73E0DA7F040AAF99B86E" = {
+			"children" = ("6DB0934527C44DB45713D695", "376168C57173C726A3F6A97B", "E7A139231E77B9C75D1C3F43", "0D1EBDB686FF57B98B90B431", "CF4F16157E9FC53591F8CCA0", "5E066F6C8DF424E007F8089A", "9AF1AAEE5DE900F3FBEF9A86", "931BC89703BCEDAFD631F3B2", "F5E0F31FFC38BE05A663B9F7", "AD8F4D291349874AE0B2067D", "88F437E5DF839B61EA6C0BA4", "B5066D202F8BC4E867ADC030", "BC547D7D6DD2EF000E02726F", "833B86EC0CEB0AB9B2DAC940", "0704D9093736082255489757", "A91EECFDF83E81F6DCD12CE4", "007EEE7810ED671C0930794B", "9E87CCD73875A1DFD86E29B2", "A8784816A70424A3A63250ED");
+			"isa" = "PBXGroup";
+			"name" = "Sources";
+			"sourceTree" = "<group>";
+		};
+		"5E066F6C8DF424E007F8089A" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Bridge/NativeMessageHandler.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"61F74E8EBEC1D7A68AD29FCF" = {
+			"fileRef" = "833B86EC0CEB0AB9B2DAC940";
+			"isa" = "PBXBuildFile";
+		};
+		"6ACE7BC297BF23705D4E5F56" = {
+			"buildActionMask" = 2147483647;
+			"files" = ("0F4D4B2A447776D9D9EDA57A", "A30C0754FE4186D02BAEB153", "EF858DABC76D46D6CFB48007", "F510F5A598EC78B60193A6C0", "B21CC429500A11576EF919EE", "D2017B33C25A764972A6B220", "76557A745618F88C794284C4", "1C01DB8E021279885496CD6B", "806D83512E97B4D43A2D73CF", "7DD9CA25E4930E766E5468B2", "31209E75ED392D5808D8E7C7", "96BC3DDEC34D4C851D52E651", "A374AF35AEDF2D9CB1804B01", "61F74E8EBEC1D7A68AD29FCF", "EC667131CE22F54E514EFF23", "9E9F599A1318FDBF8EB8AB9E", "BF0B904BC2EA2B75C08A0049", "D15ED35B43DA8D284D8DE00E", "08CEF51427A923A5F4E03211");
+			"isa" = "PBXSourcesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"6DB0934527C44DB45713D695" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/App/AppDelegate.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6F7199ED7B63CDA338A0FB82" = {
+			"children" = ("81F31879437340D5CD6ED968", "70F09BF32F6D77A92FF191B4");
+			"isa" = "PBXGroup";
+			"name" = "Products";
+			"sourceTree" = "<group>";
+		};
+		"70F09BF32F6D77A92FF191B4" = {
+			"explicitFileType" = "wrapper.cfbundle";
+			"includeInIndex" = 0;
+			"isa" = "PBXFileReference";
+			"path" = "TYMusicProbeTests.xctest";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"71DB64AD7B9A645942748940" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.text-based-dylib-definition";
+			"path" = "usr/lib/libsqlite3.tbd";
+			"sourceTree" = "SDKROOT";
+		};
+		"743B824A6D5AD132578EB1DD" = {
+			"buildConfigurations" = ("F2C149E797B6A8D3976B8651", "027611F255F56D1812D56062");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+			"isa" = "XCConfigurationList";
+		};
+		"76557A745618F88C794284C4" = {
+			"fileRef" = "9AF1AAEE5DE900F3FBEF9A86";
+			"isa" = "PBXBuildFile";
+		};
+		"771EC440B5B5713D9B5CAE5B" = {
+			"fileRef" = "0691E6B56FB6AEEBB3B8233C";
+			"isa" = "PBXBuildFile";
+		};
+		"7DD9CA25E4930E766E5468B2" = {
+			"fileRef" = "AD8F4D291349874AE0B2067D";
+			"isa" = "PBXBuildFile";
+		};
+		"806D83512E97B4D43A2D73CF" = {
+			"fileRef" = "F5E0F31FFC38BE05A663B9F7";
+			"isa" = "PBXBuildFile";
+		};
+		"80A1BD238698C7A8448809BC" = {
+			"fileRef" = "8D1DA6216890CA72D810C7C2";
+			"isa" = "PBXBuildFile";
+		};
+		"81F31879437340D5CD6ED968" = {
+			"explicitFileType" = "wrapper.application";
+			"includeInIndex" = 0;
+			"isa" = "PBXFileReference";
+			"path" = "TYMusicProbe.app";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"833B86EC0CEB0AB9B2DAC940" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Data/AtomicJSONStore.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8619E39B688A33CB92F66F7B" = {
+			"containerPortal" = "244210E48437B6556980A702";
+			"isa" = "PBXContainerItemProxy";
+			"proxyType" = 1;
+			"remoteGlobalIDString" = "8C1A045E96B998B40533C7FF";
+			"remoteInfo" = "TYMusicProbe";
+		};
+		"88F437E5DF839B61EA6C0BA4" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Capabilities/PathPolicy.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8AE5B7714ADA174B7F3C8E80" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Tests/BiliMediaParserTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8C1A045E96B998B40533C7FF" = {
+			"buildConfigurationList" = "743B824A6D5AD132578EB1DD";
+			"buildPhases" = ("6ACE7BC297BF23705D4E5F56", "13D58F750C9F7A867F986420", "EB12F685944315C425ABFF58");
+			"buildRules" = ();
+			"dependencies" = ();
+			"isa" = "PBXNativeTarget";
+			"name" = "TYMusicProbe";
+			"productName" = "TYMusicProbe";
+			"productReference" = "81F31879437340D5CD6ED968";
+			"productType" = "com.apple.product-type.application";
+		};
+		"8D1DA6216890CA72D810C7C2" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder";
+			"path" = "Tests/Fixtures";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"923019BD38FF97989F221A61" = {
+			"buildActionMask" = 2147483647;
+			"files" = ("A9B1667EB0C7429B356993A8", "CE94EDA80DA7136416C4F170", "771EC440B5B5713D9B5CAE5B");
+			"isa" = "PBXSourcesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"931BC89703BCEDAFD631F3B2" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Bridge/ProbeRouter.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"96BC3DDEC34D4C851D52E651" = {
+			"fileRef" = "B5066D202F8BC4E867ADC030";
+			"isa" = "PBXBuildFile";
+		};
+		"9AF1AAEE5DE900F3FBEF9A86" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Bridge/NativeRequest.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9E87CCD73875A1DFD86E29B2" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Domain/PlaybackQueue.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9E9F599A1318FDBF8EB8AB9E" = {
+			"fileRef" = "A91EECFDF83E81F6DCD12CE4";
+			"isa" = "PBXBuildFile";
+		};
+		"A30C0754FE4186D02BAEB153" = {
+			"fileRef" = "376168C57173C726A3F6A97B";
+			"isa" = "PBXBuildFile";
+		};
+		"A374AF35AEDF2D9CB1804B01" = {
+			"fileRef" = "BC547D7D6DD2EF000E02726F";
+			"isa" = "PBXBuildFile";
+		};
+		"A659406E36691DCFE18B1FD4" = {
+			"buildSettings" = {
+				"BUNDLE_LOADER" = "$(TEST_HOST)";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"DEVELOPMENT_TEAM" = "";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe.tests";
+				"PRODUCT_NAME" = "TYMusicProbeTests";
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_VERSION" = "5.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"TEST_HOST" = "$(BUILT_PRODUCTS_DIR)/TYMusicProbe.app/TYMusicProbe";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+		};
+		"A8784816A70424A3A63250ED" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Domain/ProbeDownloadService.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A91EECFDF83E81F6DCD12CE4" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Domain/BiliMediaProbeService.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A9B1667EB0C7429B356993A8" = {
+			"fileRef" = "8AE5B7714ADA174B7F3C8E80";
+			"isa" = "PBXBuildFile";
+		};
+		"AA0596BBDB4DCC95D5D4F10C" = {
+			"children" = ("596B73E0DA7F040AAF99B86E", "D60409337774CCE94860379A", "C64D05C235AEAF3A95BC8284", "1FED7940D0AD19FC201DD435", "71DB64AD7B9A645942748940", "6F7199ED7B63CDA338A0FB82");
+			"isa" = "PBXGroup";
+			"sourceTree" = "<group>";
+		};
+		"AC6BC420091659B5ED720E0A" = {
+			"buildSettings" = {
+				"BUNDLE_LOADER" = "$(TEST_HOST)";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"DEVELOPMENT_TEAM" = "";
+				"ENABLE_TESTABILITY" = "YES";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe.tests";
+				"PRODUCT_NAME" = "TYMusicProbeTests";
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_VERSION" = "5.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"TEST_HOST" = "$(BUILT_PRODUCTS_DIR)/TYMusicProbe.app/TYMusicProbe";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+		};
+		"AD8F4D291349874AE0B2067D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Capabilities/BiliMediaParser.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B1F33F0DF5D562F7B2106E58" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "8C1A045E96B998B40533C7FF";
+			"targetProxy" = "8619E39B688A33CB92F66F7B";
+		};
+		"B21CC429500A11576EF919EE" = {
+			"fileRef" = "CF4F16157E9FC53591F8CCA0";
+			"isa" = "PBXBuildFile";
+		};
+		"B5066D202F8BC4E867ADC030" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Capabilities/ProbeError.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"BB63AC07C944A2DA76599CB9" = {
+			"buildConfigurations" = ("AC6BC420091659B5ED720E0A", "A659406E36691DCFE18B1FD4");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+			"isa" = "XCConfigurationList";
+		};
+		"BC547D7D6DD2EF000E02726F" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Capabilities/SQLiteProbe.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"BF0B904BC2EA2B75C08A0049" = {
+			"fileRef" = "007EEE7810ED671C0930794B";
+			"isa" = "PBXBuildFile";
+		};
+		"C4EECED6B022BF4B525F7174" = {
+			"buildActionMask" = 2147483647;
+			"files" = ();
+			"isa" = "PBXFrameworksBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"C64D05C235AEAF3A95BC8284" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder";
+			"path" = "Resources";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"CE94EDA80DA7136416C4F170" = {
+			"fileRef" = "327F797AF8E71C15F5EA9367";
+			"isa" = "PBXBuildFile";
+		};
+		"CF4F16157E9FC53591F8CCA0" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Bridge/BundledSchemeHandler.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"D15ED35B43DA8D284D8DE00E" = {
+			"fileRef" = "9E87CCD73875A1DFD86E29B2";
+			"isa" = "PBXBuildFile";
+		};
+		"D2017B33C25A764972A6B220" = {
+			"fileRef" = "5E066F6C8DF424E007F8089A";
+			"isa" = "PBXBuildFile";
+		};
+		"D60409337774CCE94860379A" = {
+			"children" = ("8AE5B7714ADA174B7F3C8E80", "327F797AF8E71C15F5EA9367", "0691E6B56FB6AEEBB3B8233C", "8D1DA6216890CA72D810C7C2");
+			"isa" = "PBXGroup";
+			"name" = "Tests";
+			"sourceTree" = "<group>";
+		};
+		"E2EDCD14762CC2F70971BC55" = {
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ENABLE_TESTABILITY" = "YES";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"SDKROOT" = "iphoneos";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_VERSION" = "5.0";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+		};
+		"E49449A51B1C1B61FFEBC152" = {
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"SDKROOT" = "iphoneos";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"SWIFT_VERSION" = "5.0";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+		};
+		"E4BB408D666ACFAF1A684EC9" = {
+			"buildActionMask" = 2147483647;
+			"files" = ("80A1BD238698C7A8448809BC");
+			"isa" = "PBXResourcesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"E7A139231E77B9C75D1C3F43" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/App/ProbeViewController.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"EB12F685944315C425ABFF58" = {
+			"buildActionMask" = 2147483647;
+			"files" = ("49CB9BEF13C3A6676737FB3C");
+			"isa" = "PBXResourcesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"EC667131CE22F54E514EFF23" = {
+			"fileRef" = "0704D9093736082255489757";
+			"isa" = "PBXBuildFile";
+		};
+		"EF858DABC76D46D6CFB48007" = {
+			"fileRef" = "E7A139231E77B9C75D1C3F43";
+			"isa" = "PBXBuildFile";
+		};
+		"F2C149E797B6A8D3976B8651" = {
+			"buildSettings" = {
+				"CLANG_ENABLE_MODULES" = "YES";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"DEVELOPMENT_TEAM" = "";
+				"ENABLE_TESTABILITY" = "YES";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"INFOPLIST_FILE" = "Config/Info.plist";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe";
+				"PRODUCT_NAME" = "TYMusicProbe";
+				"SDKROOT" = "iphoneos";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"SWIFT_VERSION" = "5.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+			};
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+		};
+		"F510F5A598EC78B60193A6C0" = {
+			"fileRef" = "0D1EBDB686FF57B98B90B431";
+			"isa" = "PBXBuildFile";
+		};
+		"F5E0F31FFC38BE05A663B9F7" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Capabilities/AudioImportController.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+	};
+	"rootObject" = "244210E48437B6556980A702";
+}

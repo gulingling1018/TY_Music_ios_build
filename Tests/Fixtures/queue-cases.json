@@ -1,0 +1,6 @@
+[
+  {"name":"列表循环跨越队尾","mode":"loop_list","automatic":true,"expected":[0,1,2,0,1]},
+  {"name":"单曲自动结束重播","mode":"loop_single","automatic":true,"expected":[0,0,0,0,0]},
+  {"name":"单曲模式手动切歌","mode":"loop_single","automatic":false,"expected":[0,1,2,0,1]},
+  {"name":"随机置换保留原列表索引","mode":"shuffle","order":[0,2,1],"automatic":true,"expected":[0,2,1,0,2]}
+]
