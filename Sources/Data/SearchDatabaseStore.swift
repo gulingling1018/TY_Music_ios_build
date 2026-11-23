@@ -50,7 +50,7 @@ final class SearchDatabaseStore {
         }
     }
 
-    private static func assemble(partsDirectory: URL, targetURL: URL) throws -> URL {
+    private nonisolated static func assemble(partsDirectory: URL, targetURL: URL) throws -> URL {
         let manifestURL = partsDirectory.appendingPathComponent("manifest.json")
         guard let manifestData = try? Data(contentsOf: manifestURL),
               let manifest = try? JSONDecoder().decode(SearchDatabaseManifest.self, from: manifestData) else {

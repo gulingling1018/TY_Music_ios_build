@@ -30,7 +30,7 @@ final class OfflineSearchService {
         }.value
     }
 
-    private static func open(_ url: URL) throws -> OpaquePointer {
+    private nonisolated static func open(_ url: URL) throws -> OpaquePointer {
         var db: OpaquePointer?
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READONLY, nil) == SQLITE_OK, let db else {
             if db != nil { sqlite3_close(db) }
@@ -39,7 +39,7 @@ final class OfflineSearchService {
         return db
     }
 
-    private static func search(database: URL, keyword: String, page: Int, limit: Int) throws
+    private nonisolated static func search(database: URL, keyword: String, page: Int, limit: Int) throws
         -> (songs: [[String: Any]], total: Int, hasMore: Bool) {
         let db = try open(database)
         defer { sqlite3_close(db) }
@@ -87,7 +87,7 @@ final class OfflineSearchService {
         return (songs, total, offset + songs.count < total)
     }
 
-    private static func song(from stmt: OpaquePointer?) -> [String: Any] {
+    private nonisolated static func song(from stmt: OpaquePointer?) -> [String: Any] {
         let hashId = text(stmt, 0) ?? ""
         var song: [String: Any] = [:]
         if let raw = text(stmt, 5), let data = raw.data(using: .utf8),
@@ -106,7 +106,7 @@ final class OfflineSearchService {
         return song
     }
 
-    private static func songURL(database: URL, hashId: String) throws -> String? {
+    private nonisolated static func songURL(database: URL, hashId: String) throws -> String? {
         let db = try open(database)
         defer { sqlite3_close(db) }
         var stmt: OpaquePointer?
@@ -122,11 +122,11 @@ final class OfflineSearchService {
         return url
     }
 
-    private static func bind(_ stmt: OpaquePointer?, _ index: Int32, _ value: String) {
+    private nonisolated static func bind(_ stmt: OpaquePointer?, _ index: Int32, _ value: String) {
         value.withCString { sqlite3_bind_text(stmt, index, $0, -1, sqliteTransient) }
     }
 
-    private static func text(_ stmt: OpaquePointer?, _ index: Int32) -> String? {
+    private nonisolated static func text(_ stmt: OpaquePointer?, _ index: Int32) -> String? {
         guard let text = sqlite3_column_text(stmt, index) else { return nil }
         return String(cString: UnsafeRawPointer(text).assumingMemoryBound(to: CChar.self))
     }
