@@ -1,9 +1,8 @@
-name: iOS 原型免签名编译与测试
+name: iOS 未签名安装包（IPA）
 
 # 本仓库是主仓库 TY_Music 中 ios_player/ 的公开构建镜像。
-# 仅验证原型工程的编译与原生测试，不使用开发者证书、不产出可安装 IPA。
-# 模拟器包使用 Xcode 默认 ad-hoc 签名；不要加 CODE_SIGNING_ALLOWED=NO，
-# 否则 iOS 26 模拟器会因 Info.plist 未绑定签名而报 Missing bundle ID。
+# 主产物：Release 设备版未签名 IPA，供用户自行使用第三方工具签名安装。
+# CI 不接触开发者证书、私钥或描述文件，也不产出可直接安装的成品。
 on:
   workflow_dispatch:
     inputs:
@@ -24,8 +23,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
-    name: Simulator build + XCTest (ad-hoc signed)
+  package:
+    name: Unsigned device IPA + optional simulator tests
     runs-on: macos-latest
     timeout-minutes: 60
 
@@ -68,7 +67,81 @@ jobs:
       - name: 运行桥接测试（Node）
         run: node --test Tests/native-client.test.mjs
 
+      - name: 编译 Release 设备版本（未签名）
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          xcodebuild \
+            -project "${PROJECT}" \
+            -scheme "${SCHEME}" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "${DERIVED_DATA}" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build 2>&1 | tee build/build-device.log
+
+      - name: 打包未签名 IPA
+        run: |
+          set -euo pipefail
+          APP="${DERIVED_DATA}/Build/Products/Release-iphoneos/${SCHEME}.app"
+          test -d "${APP}"
+
+          rm -rf build/ipa build/artifacts
+          mkdir -p build/ipa/Payload build/artifacts
+          cp -R "${APP}" build/ipa/Payload/
+          ditto -c -k --sequesterRsrc --keepParent build/ipa/Payload "build/artifacts/${SCHEME}-unsigned.ipa"
+
+          python3 - "${APP}" <<'PY'
+          import os, plistlib, sys
+
+          app = sys.argv[1]
+          with open(os.path.join(app, "Info.plist"), "rb") as stream:
+              info = plistlib.load(stream)
+          bundle_id = info.get("CFBundleIdentifier")
+          executable = info.get("CFBundleExecutable")
+          assert bundle_id, "缺少 CFBundleIdentifier"
+          assert executable and os.path.isfile(os.path.join(app, executable)), "缺少主可执行文件"
+          assert os.path.isfile(os.path.join(app, "Resources/Web/index.html")), "缺少 Resources/Web/index.html"
+          print("bundle id:", bundle_id)
+          print("executable:", executable)
+          print("minimum OS:", info.get("MinimumOSVersion"))
+          PY
+
+          shasum -a 256 "build/artifacts/${SCHEME}-unsigned.ipa" | tee build/ipa.sha256
+          ls -lh build/artifacts
+
+      - name: 上传未签名 IPA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-ipa
+          path: |
+            build/artifacts/*.ipa
+            build/ipa.sha256
+            build/build-device.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: 写入构建摘要
+        if: always()
+        run: |
+          {
+            echo "## iOS 未签名 IPA"
+            echo ""
+            if [ -f build/ipa.sha256 ]; then
+              echo "- IPA：\`${SCHEME}-unsigned.ipa\`"
+              echo "- SHA256：\`$(cut -d' ' -f1 build/ipa.sha256)\`"
+            else
+              echo "- 未生成 IPA，请查看 \`build-device.log\`"
+            fi
+            echo "- 安装前需使用第三方工具（Sideloadly、AltStore、ESign 等）自行签名，CI 不提供证书。"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: 编译模拟器版本（ad-hoc 签名）
+        id: simulator-build
+        continue-on-error: true
         run: |
           set -euo pipefail
           mkdir -p build
@@ -79,10 +152,11 @@ jobs:
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath "${DERIVED_DATA}" \
-            build 2>&1 | tee build/build.log
+            build 2>&1 | tee build/build-simulator.log
 
       - name: 选择可用 iPhone 模拟器
         id: simulator
+        if: steps.simulator-build.outcome == 'success'
         run: |
           python3 - <<'PY'
           import json, os, re, subprocess
@@ -116,7 +190,9 @@ jobs:
               output.write(f"name={name}\n")
           PY
 
-      - name: 运行 XCTest（ad-hoc 签名）
+      - name: 运行 XCTest（非阻塞）
+        if: steps.simulator-build.outcome == 'success'
+        continue-on-error: true
         run: |
           set -euo pipefail
           rm -rf build/NativeTests.xcresult
@@ -129,25 +205,12 @@ jobs:
             -resultBundlePath build/NativeTests.xcresult \
             test 2>&1 | tee build/test.log
 
-      - name: 打包模拟器 .app
-        if: always()
-        run: |
-          mkdir -p build/artifacts
-          APP="${DERIVED_DATA}/Build/Products/Debug-iphonesimulator/${SCHEME}.app"
-          if [ -d "${APP}" ]; then
-            ditto -c -k --sequesterRsrc --keepParent "${APP}" build/artifacts/${SCHEME}-simulator.zip
-            echo "已打包 ${APP}"
-          else
-            echo "::warning::未找到模拟器 .app，不生成压缩包"
-          fi
-
-      - name: 上传产物与测试报告
+      - name: 上传测试报告
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-simulator-build
+          name: ios-simulator-tests
           path: |
-            build/artifacts/*.zip
             build/*.log
             build/NativeTests.xcresult
           if-no-files-found: warn
