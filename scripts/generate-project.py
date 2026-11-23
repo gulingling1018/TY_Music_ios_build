@@ -73,9 +73,9 @@ def generate(write=True):
     project_id, app_id = identifier("project"), identifier("target:app")
     base = {"CODE_SIGN_STYLE": "Automatic", "DEVELOPMENT_TEAM": "", "TARGETED_DEVICE_FAMILY": "1,2",
             "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator", "LD_RUNPATH_SEARCH_PATHS": ["$(inherited)", "@executable_path/Frameworks"]}
-    app_configs = configs("appConfig", {**base, "PRODUCT_NAME": NAME, "PRODUCT_BUNDLE_IDENTIFIER": "site.meiluoluo.tymusic.probe",
+    app_configs = configs("appConfig", {**base, "PRODUCT_NAME": NAME, "PRODUCT_BUNDLE_IDENTIFIER": "site.meiluoluo.tymusic.ios",
                                          "INFOPLIST_FILE": "Config/Info.plist", "GENERATE_INFOPLIST_FILE": "NO"})
-    test_configs = configs("testConfig", {**base, "PRODUCT_NAME": NAME + "Tests", "PRODUCT_BUNDLE_IDENTIFIER": "site.meiluoluo.tymusic.probe.tests",
+    test_configs = configs("testConfig", {**base, "PRODUCT_NAME": NAME + "Tests", "PRODUCT_BUNDLE_IDENTIFIER": "site.meiluoluo.tymusic.ios.tests",
                                            "GENERATE_INFOPLIST_FILE": "YES", "TEST_HOST": "$(BUILT_PRODUCTS_DIR)/" + NAME + ".app/" + NAME,
                                            "BUNDLE_LOADER": "$(TEST_HOST)"})
     project_configs = configs("projectConfig", {})

@@ -96,8 +96,10 @@ jobs:
           set -euo pipefail
           APP="${DERIVED_DATA}/Build/Products/Release-iphoneos/${SCHEME}.app"
           test -d "${APP}"
+          /usr/bin/plutil -convert xml1 "${APP}/Info.plist"
           /usr/bin/codesign --force --sign - "${APP}"
           /usr/bin/codesign --verify --verbose=2 "${APP}"
+          /usr/bin/codesign -d --verbose=4 "${APP}" > build/codesign.txt 2>&1 || true
 
       - name: 打包未签名 IPA
         run: |
@@ -138,6 +140,7 @@ jobs:
             build/artifacts/*.ipa
             build/ipa.sha256
             build/build-device.log
+            build/codesign.txt
           if-no-files-found: warn
           retention-days: 14
 

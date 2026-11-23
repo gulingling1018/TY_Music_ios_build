@@ -22,7 +22,7 @@
 				"INFOPLIST_FILE" = "Config/Info.plist";
 				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
 				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
-				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.ios";
 				"PRODUCT_NAME" = "TYMusicProbe";
 				"SDKROOT" = "iphoneos";
 				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
@@ -342,7 +342,7 @@
 				"GENERATE_INFOPLIST_FILE" = "YES";
 				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
 				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
-				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe.tests";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.ios.tests";
 				"PRODUCT_NAME" = "TYMusicProbeTests";
 				"SDKROOT" = "iphoneos";
 				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
@@ -386,7 +386,7 @@
 				"GENERATE_INFOPLIST_FILE" = "YES";
 				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
 				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
-				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe.tests";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.ios.tests";
 				"PRODUCT_NAME" = "TYMusicProbeTests";
 				"SDKROOT" = "iphoneos";
 				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
@@ -555,7 +555,7 @@
 				"INFOPLIST_FILE" = "Config/Info.plist";
 				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
 				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
-				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.probe";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "site.meiluoluo.tymusic.ios";
 				"PRODUCT_NAME" = "TYMusicProbe";
 				"SDKROOT" = "iphoneos";
 				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";

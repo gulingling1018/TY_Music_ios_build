@@ -19,7 +19,7 @@ struct ProbeDownload: Codable {
 // URLSession delegateQueue固定为main；业务调用同样由主线程桥接路由进入。
 // 此处只实现风险原型传输，不替代正式DownloadTaskScheduler契约。
 final class ProbeDownloadService: NSObject, URLSessionDownloadDelegate {
-    static let sessionIdentifier = "site.meiluoluo.tymusic.probe.downloads.v1"
+    static let sessionIdentifier = "site.meiluoluo.tymusic.ios.downloads.v1"
     private let root: URL
     private let store: AtomicJSONStore<[ProbeDownload]>
     private(set) var records: [ProbeDownload] = []
