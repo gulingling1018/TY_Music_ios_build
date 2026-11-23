@@ -10940,7 +10940,7 @@ let activePinia;
 const setActivePinia = (pinia) => activePinia = pinia;
 const piniaSymbol = (
   /* istanbul ignore next */
-  /* @__PURE__ */ Symbol()
+  Symbol()
 );
 function isPlainObject$2(o) {
   return o && typeof o === "object" && Object.prototype.toString.call(o) === "[object Object]" && typeof o.toJSON !== "function";
@@ -11002,8 +11002,8 @@ function triggerSubscriptions(subscriptions, ...args) {
   });
 }
 const fallbackRunWithContext = (fn) => fn();
-const ACTION_MARKER = /* @__PURE__ */ Symbol();
-const ACTION_NAME = /* @__PURE__ */ Symbol();
+const ACTION_MARKER = Symbol();
+const ACTION_NAME = Symbol();
 function mergeReactiveObjects(target, patchToApply) {
   if (target instanceof Map && patchToApply instanceof Map) {
     patchToApply.forEach((value, key) => target.set(key, value));
@@ -11025,7 +11025,7 @@ function mergeReactiveObjects(target, patchToApply) {
 }
 const skipHydrateSymbol = (
   /* istanbul ignore next */
-  /* @__PURE__ */ Symbol()
+  Symbol()
 );
 function shouldHydrate(obj) {
   return !isPlainObject$2(obj) || !Object.prototype.hasOwnProperty.call(obj, skipHydrateSymbol);
@@ -11089,7 +11089,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
         events: debuggerEvents
       };
     }
-    const myListenerId = activeListener = /* @__PURE__ */ Symbol();
+    const myListenerId = activeListener = Symbol();
     nextTick$1().then(() => {
       if (activeListener === myListenerId) {
         isListening = true;
@@ -11500,7 +11500,7 @@ let ErrorTypes = /* @__PURE__ */ (function(ErrorTypes$1) {
   ErrorTypes$1[ErrorTypes$1["NAVIGATION_DUPLICATED"] = 16] = "NAVIGATION_DUPLICATED";
   return ErrorTypes$1;
 })({});
-const NavigationFailureSymbol = /* @__PURE__ */ Symbol("");
+const NavigationFailureSymbol = Symbol("");
 ({
   [ErrorTypes.MATCHER_NOT_FOUND]({ location: location2, currentLocation }) {
     return `No match for
@@ -11583,11 +11583,11 @@ function normalizeQuery(query) {
   }
   return normalizedQuery;
 }
-const matchedRouteKey = /* @__PURE__ */ Symbol("");
-const viewDepthKey = /* @__PURE__ */ Symbol("");
-const routerKey = /* @__PURE__ */ Symbol("");
-const routeLocationKey = /* @__PURE__ */ Symbol("");
-const routerViewLocationKey = /* @__PURE__ */ Symbol("");
+const matchedRouteKey = Symbol("");
+const viewDepthKey = Symbol("");
+const routerKey = Symbol("");
+const routeLocationKey = Symbol("");
+const routerViewLocationKey = Symbol("");
 function useCallbacks() {
   let handlers = [];
   function add(handler) {
@@ -22356,7 +22356,7 @@ function requireVuedraggable_umd() {
             (function(module3, exports3, __webpack_require__) {
               var fails = __webpack_require__("d039");
               module3.exports = !!Object.getOwnPropertySymbols && !fails(function() {
-                return !String(/* @__PURE__ */ Symbol());
+                return !String(Symbol());
               });
             })
           ),

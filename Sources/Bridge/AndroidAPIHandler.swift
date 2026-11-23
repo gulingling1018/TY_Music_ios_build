@@ -2,13 +2,29 @@ import Foundation
 import WebKit
 
 /// 给共用 Vue 前端提供 `window.Android` 兼容层。
-/// 第一阶段只保证正式界面可以启动、首页歌单可以渲染；未实现接口显式返回 501，
-/// 后续播放、搜索、下载按模块替换为真实实现。
+/// 当前阶段：正式界面 + 本地音乐导入/播放；搜索与 B 站下载仍返回 501。
 @MainActor
 final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
     static let scriptMessageName = "tyMusicApi"
 
+    private let runtime: ProbeRuntime
     private weak var webView: WKWebView?
+
+    private struct ScanState {
+        var running = false
+        var phase = "idle"
+        var newCount = 0
+        var count = 0
+        var message = ""
+        var error: String?
+    }
+
+    private var scan = ScanState()
+    private var scanTask: Task<Void, Never>?
+
+    init(runtime: ProbeRuntime) {
+        self.runtime = runtime
+    }
 
     func attach(_ webView: WKWebView) {
         self.webView = webView
@@ -47,11 +63,19 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
         }
         let path = components.path.isEmpty ? "/" : components.path
 
-        // 第一阶段：先让首页与内置歌单可显示。数据为空，但结构完整，后续换成 SQLite 实现。
-        if method == "GET", path == "/api/playlists" {
-            return ["status": 200, "data": ["playlists": Self.pinnedPlaylists]]
+        if method == "POST", path == "/api/playlist/scan-local" {
+            return startLocalScan()
         }
-        if method == "GET", path == "/api/playlist/local_music" || path == "/api/playlist/bili_downloads" {
+        if method == "GET", path == "/api/scan-progress" {
+            return scanProgressEnvelope()
+        }
+        if method == "GET", path == "/api/playlists" {
+            return ["status": 200, "data": ["playlists": pinnedPlaylists()]]
+        }
+        if method == "GET", path == "/api/playlist/local_music" {
+            return ["status": 200, "data": ["songs": runtime.library.songPayload(), "reorder_count": 0]]
+        }
+        if method == "GET", path == "/api/playlist/bili_downloads" {
             return ["status": 200, "data": ["songs": [], "reorder_count": 0]]
         }
         if method == "GET", path.hasPrefix("/api/playlist/"), path.hasSuffix("/get") {
@@ -66,9 +90,6 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
         if method == "GET", path == "/api/download-stats" {
             return ["status": 200, "data": [String: Any]()]
         }
-        if method == "GET", path == "/api/scan-progress" {
-            return ["status": 200, "data": ["active": false, "progress": 0]]
-        }
         if method == "GET", path == "/api/auth/bilibili/status" {
             return ["status": 200, "data": ["loggedIn": false, "authorized": false]]
         }
@@ -81,10 +102,56 @@ final class AndroidAPIHandler: NSObject, WKScriptMessageHandler {
         return Self.error(501, "NOT_IMPLEMENTED", "iOS 版本尚未实现该接口")
     }
 
-    private static let pinnedPlaylists: [[String: Any]] = [
-        ["id": "local_music", "name": "本地音乐", "count": 0, "isCustom": false],
-        ["id": "bili_downloads", "name": "下载", "count": 0, "isCustom": false]
-    ]
+    private func pinnedPlaylists() -> [[String: Any]] {
+        [
+            ["id": "local_music", "name": "本地音乐", "count": runtime.library.tracks.count, "isCustom": false],
+            ["id": "bili_downloads", "name": "下载", "count": 0, "isCustom": false]
+        ]
+    }
+
+    // MARK: - 本地导入
+
+    private func startLocalScan() -> [String: Any] {
+        guard scanTask == nil else {
+            return ["status": 200, "data": ["started": false, "alreadyRunning": true]]
+        }
+        scan = ScanState(running: true, phase: "scanning", newCount: 0,
+                         count: runtime.library.tracks.count, message: "正在选择音频文件…", error: nil)
+        scanTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                let picked = try await self.runtime.importer.pick()
+                let added = try self.runtime.library.add(picked)
+                self.finishScan(added: added, error: nil)
+            } catch let error as ProbeError where error.code == "CANCELLED" {
+                self.finishScan(added: 0, error: "已取消导入")
+            } catch {
+                self.finishScan(added: 0, error: error.localizedDescription)
+            }
+        }
+        return ["status": 200, "data": ["started": true]]
+    }
+
+    private func finishScan(added: Int, error: String?) {
+        scanTask = nil
+        scan.running = false
+        scan.phase = error == nil ? "done" : "error"
+        scan.newCount = added
+        scan.count = runtime.library.tracks.count
+        scan.message = error ?? "导入完成"
+        scan.error = error
+    }
+
+    private func scanProgressEnvelope() -> [String: Any] {
+        ["status": 200, "data": [
+            "isRunning": scan.running,
+            "phase": scan.phase,
+            "newCount": scan.newCount,
+            "count": scan.count,
+            "message": scan.message,
+            "error": (scan.error as Any?) ?? NSNull()
+        ]]
+    }
 
     private static func error(_ status: Int, _ code: String, _ message: String) -> [String: Any] {
         ["status": status, "error": ["code": code, "message": message]]

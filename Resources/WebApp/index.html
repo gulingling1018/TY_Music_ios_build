@@ -73,146 +73,7 @@
       }
     })();
   </script>
-  <style>
-    #app-splash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #f2f5f8;
-      background-image: var(--splash-preload-media, radial-gradient(circle at top, rgba(255, 255, 255, 0.96), rgba(242, 245, 248, 0.92) 52%, rgba(232, 236, 241, 0.96) 100%));
-      background-repeat: no-repeat;
-      background-size: var(--splash-preload-fit, contain);
-      background-position: center center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      overflow: hidden;
-    }
 
-    .splash-media-layer {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 0;
-    }
-
-    .splash-custom-media {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      max-width: none;
-      max-height: none;
-      object-fit: contain;
-      object-position: center center;
-      transform-origin: center center;
-    }
-
-    .splash-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #app-splash.splash-customized::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, var(--splash-overlay-opacity, 0));
-      backdrop-filter: blur(var(--splash-overlay-blur, 0px));
-      -webkit-backdrop-filter: blur(var(--splash-overlay-blur, 0px));
-      z-index: 1;
-    }
-
-    #app-splash.splash-customized .splash-custom-media {
-      border-radius: var(--splash-media-radius, 0px);
-      /* 开屏第一帧必须是不透明图片，不再从 opacity=0 开始淡入。 */
-    }
-
-    #app-splash.splash-customized .splash-content {
-      display: none;
-    }
-
-    .splash-logo {
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 32px;
-    }
-
-    #app-splash.splash-customized .splash-logo {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
-      color: #fff;
-    }
-
-    .splash-loader {
-      width: 40px;
-      height: 4px;
-      background: rgba(26, 40, 58, 0.08);
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 0 0 1px rgba(26, 40, 58, 0.04);
-    }
-
-    .splash-loader::after {
-      content: '';
-      position: absolute;
-      left: -100%;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #7fa8d8, #2f8fff, #7fa8d8);
-      animation: loading 1.5s infinite;
-    }
-
-    @keyframes loading {
-      0% {
-        left: -100%;
-      }
-
-      100% {
-        left: 100%;
-      }
-    }
-
-    body.app-ready #app-splash,
-    html.not-android #app-splash,
-    html.native-startup #app-splash {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    @keyframes splashFade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes splashFadeScale {
-      from { opacity: 0; filter: saturate(0.85); }
-      to { opacity: 1; filter: saturate(1); }
-    }
-
-    @keyframes splashRise {
-      from { opacity: 0; margin-top: 18px; }
-      to { opacity: 1; margin-top: 0; }
-    }
-  </style>
   <script>
     (function () {
       let resolveSplashMediaReady;
@@ -464,6 +325,7 @@
     </div>
   </div>
   <div id="app"></div>
+
 </body>
 
 </html>
