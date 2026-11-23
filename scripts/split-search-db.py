@@ -17,7 +17,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path,
                         default=Path("andriod_player/app/src/main/assets/DB/music_cache.db"))
-    parser.add_argument("--output", type=Path, default=Path("Resources/SearchDataParts"))
+    parser.add_argument("--output", type=Path, default=Path("AppAssets/SearchDataParts"))
     parser.add_argument("--parts", type=int, default=3)
     args = parser.parse_args()
 

@@ -24,7 +24,7 @@ final class SearchDatabaseStore {
 
     init(bundle: Bundle = .main, support: URL) {
         partsDirectory = bundle.resourceURL?
-            .appendingPathComponent("Resources/SearchDataParts", isDirectory: true)
+            .appendingPathComponent("AppAssets/SearchDataParts", isDirectory: true)
             ?? URL(fileURLWithPath: "/nonexistent")
         targetURL = support.appendingPathComponent("SearchData/music_cache.db")
     }

@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parent / "andriod_player/app/src/main/assets/DB/music_cache.db"
-TARGET = ROOT / "Resources/SearchData/music_cache.db"
+TARGET = ROOT / "AppAssets/SearchData/music_cache.db"
 
 
 def digest(path):

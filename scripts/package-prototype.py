@@ -12,7 +12,7 @@ if __name__ == "__main__":
     OUTPUT.mkdir(parents=True, exist_ok=True)
     destination = OUTPUT / "TYMusic-iOS-prototype-source.zip"
     files = [IOS / "README.md", IOS / ".gitignore"]
-    for folder in ("Sources", "Tests", "Resources", "Config", "scripts", "TYMusicProbe.xcodeproj"):
+    for folder in ("Sources", "Tests", "AppAssets", "Config", "scripts", "TYMusicProbe.xcodeproj"):
         files.extend(path for path in (IOS / folder).rglob("*") if path.is_file()
                      and "__pycache__" not in path.parts and "xcuserdata" not in path.parts)
     for name in ("[17]IOS_EXPANSION_PLAN_20261114.md", "[17]IOS_BRIDGE_CONTRACT_20261114.md", "[17]IOS_PROTOTYPE_PROGRESS_20261114.md"):

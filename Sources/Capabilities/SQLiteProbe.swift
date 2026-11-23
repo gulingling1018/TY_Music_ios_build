@@ -11,7 +11,7 @@ enum SQLiteProbe {
         }
         if memory != nil { sqlite3_close(memory) }
         guard let base = bundle.resourceURL else { return result }
-        let file = base.appendingPathComponent("Resources/SearchData/music_cache.db")
+        let file = base.appendingPathComponent("AppAssets/SearchData/music_cache.db")
         guard FileManager.default.fileExists(atPath: file.path) else {
             result["bundledDatabase"] = "not_staged"
             return result

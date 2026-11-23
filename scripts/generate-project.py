@@ -47,7 +47,7 @@ def generate(write=True):
             file_ref = ref(relative, "sourcecode.swift")
             refs.append(file_ref)
             builds.append(build(relative, file_ref))
-    resource = ref("Resources", "folder")
+    resource = ref("AppAssets", "folder")
     fixtures = ref("Tests/Fixtures", "folder")
     info = ref("Config/Info.plist", "text.plist.xml")
     sqlite = add("ref:sqlite", "PBXFileReference", path="usr/lib/libsqlite3.tbd", sourceTree="SDKROOT", lastKnownFileType="sourcecode.text-based-dylib-definition")
@@ -85,7 +85,7 @@ def generate(write=True):
 
     app_phases = [phase("phase:app:sources", "PBXSourcesBuildPhase", app_sources),
                   phase("phase:app:frameworks", "PBXFrameworksBuildPhase", [build("sqlite", sqlite)]),
-                  phase("phase:app:resources", "PBXResourcesBuildPhase", [build("Resources", resource)])]
+                  phase("phase:app:resources", "PBXResourcesBuildPhase", [build("AppAssets", resource)])]
     test_phases = [phase("phase:test:sources", "PBXSourcesBuildPhase", test_sources),
                    phase("phase:test:frameworks", "PBXFrameworksBuildPhase", []),
                    phase("phase:test:resources", "PBXResourcesBuildPhase", [build("Fixtures", fixtures)])]

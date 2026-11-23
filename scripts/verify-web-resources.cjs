@@ -4,7 +4,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '../Resources/Web');
+const root = path.resolve(__dirname, '../AppAssets/Web');
 const output = path.resolve(__dirname, '../../docs/test-reports/evidence/[17]IOS_PROTOTYPE_20261114');
 const mime = { '.mjs': 'application/javascript', '.html': 'text/html', '.css': 'text/css', '.svg': 'image/svg+xml' };
 

@@ -20,7 +20,7 @@ final class ProbeViewController: UIViewController, WKNavigationDelegate {
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
-        let root = Bundle.main.resourceURL!.appendingPathComponent("Resources", isDirectory: true)
+        let root = Bundle.main.resourceURL!.appendingPathComponent("AppAssets", isDirectory: true)
         configuration.setURLSchemeHandler(BundledSchemeHandler(root: root, mediaRoot: runtime.files.root, proxy: runtime.streamProxy), forURLScheme: "tymusic")
         let apiHandler = AndroidAPIHandler(runtime: runtime)
         configuration.userContentController.add(apiHandler, name: AndroidAPIHandler.scriptMessageName)

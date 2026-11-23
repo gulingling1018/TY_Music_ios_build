@@ -99,6 +99,10 @@
 			"projectRoot" = "";
 			"targets" = ("8C1A045E96B998B40533C7FF", "2ADDEE89B29C55E11126D89F");
 		};
+		"272739984D17EAC35AB2C7AA" = {
+			"fileRef" = "A17CE67D3AA9F1E1A8FF1C0E";
+			"isa" = "PBXBuildFile";
+		};
 		"2ADDEE89B29C55E11126D89F" = {
 			"buildConfigurationList" = "BB63AC07C944A2DA76599CB9";
 			"buildPhases" = ("923019BD38FF97989F221A61", "C4EECED6B022BF4B525F7174", "E4BB408D666ACFAF1A684EC9");
@@ -128,10 +132,6 @@
 		};
 		"39E5E7903F02B718D432099C" = {
 			"fileRef" = "71DB64AD7B9A645942748940";
-			"isa" = "PBXBuildFile";
-		};
-		"49CB9BEF13C3A6676737FB3C" = {
-			"fileRef" = "C64D05C235AEAF3A95BC8284";
 			"isa" = "PBXBuildFile";
 		};
 		"546BBC2E496ACB7D9BEE7BA6" = {
@@ -324,6 +324,12 @@
 			"fileRef" = "91EA10340C8E42B679484441";
 			"isa" = "PBXBuildFile";
 		};
+		"A17CE67D3AA9F1E1A8FF1C0E" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder";
+			"path" = "AppAssets";
+			"sourceTree" = "SOURCE_ROOT";
+		};
 		"A30C0754FE4186D02BAEB153" = {
 			"fileRef" = "376168C57173C726A3F6A97B";
 			"isa" = "PBXBuildFile";
@@ -371,7 +377,7 @@
 			"isa" = "PBXBuildFile";
 		};
 		"AA0596BBDB4DCC95D5D4F10C" = {
-			"children" = ("596B73E0DA7F040AAF99B86E", "D60409337774CCE94860379A", "C64D05C235AEAF3A95BC8284", "1FED7940D0AD19FC201DD435", "71DB64AD7B9A645942748940", "6F7199ED7B63CDA338A0FB82");
+			"children" = ("596B73E0DA7F040AAF99B86E", "D60409337774CCE94860379A", "A17CE67D3AA9F1E1A8FF1C0E", "1FED7940D0AD19FC201DD435", "71DB64AD7B9A645942748940", "6F7199ED7B63CDA338A0FB82");
 			"isa" = "PBXGroup";
 			"sourceTree" = "<group>";
 		};
@@ -452,12 +458,6 @@
 			"isa" = "PBXFrameworksBuildPhase";
 			"runOnlyForDeploymentPostprocessing" = 0;
 		};
-		"C64D05C235AEAF3A95BC8284" = {
-			"isa" = "PBXFileReference";
-			"lastKnownFileType" = "folder";
-			"path" = "Resources";
-			"sourceTree" = "SOURCE_ROOT";
-		};
 		"CE94EDA80DA7136416C4F170" = {
 			"fileRef" = "327F797AF8E71C15F5EA9367";
 			"isa" = "PBXBuildFile";
@@ -526,7 +526,7 @@
 		};
 		"EB12F685944315C425ABFF58" = {
 			"buildActionMask" = 2147483647;
-			"files" = ("49CB9BEF13C3A6676737FB3C");
+			"files" = ("272739984D17EAC35AB2C7AA");
 			"isa" = "PBXResourcesBuildPhase";
 			"runOnlyForDeploymentPostprocessing" = 0;
 		};

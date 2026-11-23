@@ -11,7 +11,7 @@
 - `Sources/Capabilities`：路径规则、文件选择、媒体解析、SQLite检查。
 - `Sources/Domain`：原生队列/AVPlayer、B站匿名解析、原型后台传输。
 - `Sources/Data`：原子JSON持久化、媒体副本存储。
-- `Resources/Web`：独立验证页面，不修改现有Vue产品页面。
+- `AppAssets/Web`：独立验证页面，不修改现有Vue产品页面。
 - `Tests`：原生XCTest和本地Node桥测试；两者验证范围不同。
 - `scripts`：标准库Xcode工程生成、资源暂存和本地验证。
 
@@ -117,16 +117,16 @@ xcodebuild -project TYMusicProbe.xcodeproj -scheme TYMusicProbe \
 
 ## [07] 正式前端接入（2026-11-23）
 
-- 默认入口改为`Resources/WebApp/index.html`，即`frontend/dist`的生产构建产物；探针页仍保留在`Resources/Web/index.html`。
-- `tymusic://`自定义scheme根目录改为`Resources`，前端相对资源可直接加载；`/api/cover/*`统一返回内置占位封面。
+- 默认入口改为`AppAssets/WebApp/index.html`，即`frontend/dist`的生产构建产物；探针页仍保留在`AppAssets/Web/index.html`。
+- `tymusic://`自定义scheme根目录改为`AppAssets`，前端相对资源可直接加载；`/api/cover/*`统一返回内置占位封面。
 - 新增`AndroidAPIHandler`，在文档开始注入`window.Android`兼容层并把`callApiAsync`转给Swift；当前已实现`/api/playlists`与内置歌单空详情，其余接口显式返回501。
 - 播放管理：本地音乐通过`UIDocumentPicker`导入并持久化；前端播放走`/api/stream_local?path=…`，iOS按HTTP Range提供音频；`AVAudioSession`已设为`.playback`，支持锁屏与后台播放。
 - 构建产物内的`file:///android_asset/`已替换为`tymusic://app/WebApp/`，避免iOS加载Android私有路径。
 - 本地搜索：`GET /api/search`查询完整离线索引（`music_cache.db`，102 MB），并合并已导入本地音乐；分页字段对齐前端。
-- 搜索库拆分：`scripts/split-search-db.py`把`music_cache.db`切成3个约34 MB分片并生成`manifest.json`（含SHA256）；分片位于构建仓库`Resources/SearchDataParts/`，随IPA打包，App首次启动拼接并校验后以只读SQLite查询。
+- 搜索库拆分：`scripts/split-search-db.py`把`music_cache.db`切成3个约34 MB分片并生成`manifest.json`（含SHA256）；分片位于构建仓库`AppAssets/SearchDataParts/`，随IPA打包，App首次启动拼接并校验后以只读SQLite查询。
 - 搜索结果的B站音频通过`/api/stream_remote`按需解析DASH并代理转发，可直接播放。
 - B站下载：匿名视频搜索（2-5分钟、按播放量排序）、DASH音频解析、URLSession后台下载，以及任务列表/暂停/恢复/取消/重试和「下载」歌单已接入。
 - 未完成：自定义歌单数据、B站登录/收藏夹；按模块继续接入。
-- 复现说明：`frontend/dist`由Vite 7.2.4生产构建（开屏CSS已抽离，规避7.3.3的html-inline-proxy错误）；复制到`Resources/WebApp`时会把`file:///android_asset/`替换为`tymusic://app/WebApp/`。
+- 复现说明：`frontend/dist`由Vite 7.2.4生产构建（开屏CSS已抽离，规避7.3.3的html-inline-proxy错误）；复制到`AppAssets/WebApp`时会把`file:///android_asset/`替换为`tymusic://app/WebApp/`。
 
 方案与契约见`docs/[17]IOS_EXPANSION_PLAN_20261114.md`及`docs/[17]IOS_BRIDGE_CONTRACT_20261114.md`。
