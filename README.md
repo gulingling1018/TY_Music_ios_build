@@ -123,6 +123,7 @@ xcodebuild -project TYMusicProbe.xcodeproj -scheme TYMusicProbe \
 - 播放管理：本地音乐通过`UIDocumentPicker`导入并持久化；前端播放走`/api/stream_local?path=…`，iOS按HTTP Range提供音频；`AVAudioSession`已设为`.playback`，支持锁屏与后台播放。
 - 构建产物内的`file:///android_asset/`已替换为`tymusic://app/WebApp/`，避免iOS加载Android私有路径。
 - 本地搜索：`GET /api/search`对已导入本地音乐按标题过滤并分页；完整离线索引（`music_cache.db`，102 MB）尚未内置，计划拆分到GitHub单文件限制以下后接入。
+- 搜索库拆分：`scripts/split-search-db.py`把`music_cache.db`切成3个约34 MB分片并生成`manifest.json`（含SHA256）；分片存放在构建仓库`SearchDataParts/`，暂不进入IPA，完整索引搜索接入时再按清单组装校验。
 - 未完成：自定义歌单数据、B站下载；按模块继续接入。
 - 复现说明：`frontend/dist`由Vite生产构建生成；当前Vite 7.3.3对该`index.html`的内联样式报html-inline-proxy错误，暂用现有生产产物，修复构建后再改为CI内重建。
 

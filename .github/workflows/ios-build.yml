@@ -18,7 +18,11 @@ on:
         type: boolean
   push:
     branches: [main]
+    paths-ignore:
+      - 'SearchDataParts/**'
   pull_request:
+    paths-ignore:
+      - 'SearchDataParts/**'
 
 permissions:
   contents: read
